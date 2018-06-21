@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">Spendometer</string>
+    <string name="app_name">Spend-o-meter</string>
+    <string name="main_header_expense_breakdown">Expense Breakdown</string>
+    <string name="main_header_categories">Categories</string>
+    <string name="main_header_recent_spending">Recent Spending</string>
 </resources>
