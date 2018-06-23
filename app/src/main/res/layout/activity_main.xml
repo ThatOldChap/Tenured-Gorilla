@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- TextView to click to go to the Categories Activity-->
     <TextView
         android:id="@+id/main_header_categories"
         android:layout_width="0dp"
@@ -21,6 +22,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
+    <!-- TextView to click to go to the Expense Breakdown Activity-->
     <TextView
         android:id="@+id/main_header_expense_breakdown"
         android:layout_width="0dp"
@@ -34,6 +36,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- TextView to click to go to the Recent Spending Activity-->
     <TextView
         android:id="@+id/main_header_recent_spending"
         android:layout_width="0dp"

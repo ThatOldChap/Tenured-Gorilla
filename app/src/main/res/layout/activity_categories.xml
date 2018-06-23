@@ -4,6 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     tools:context=".CategoriesActivity">
+
+    <!-- ListView for the list of categories -->
+    <ListView
+        android:id="@+id/list_view_categories"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/add_new_category"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- TextView for the Add New Category Button -->
+    <TextView
+        android:id="@+id/add_new_category"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@color/colorAccent"
+        android:gravity="center"
+        android:text="@string/add_new_category"
+        android:textColor="#000000"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Layout for the empty view -->
+    <TextView
+        android:id="@+id/empty_view_categories"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="#FFFFFF"
+        android:gravity="center" />
 
 </android.support.constraint.ConstraintLayout>
