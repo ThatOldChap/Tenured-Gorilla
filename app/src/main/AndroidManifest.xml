@@ -19,7 +19,7 @@
 
         <activity
             android:name=".ExpenseListActivity"
-            android:label="@string/app_name" >
+            android:label="@string/main_header_expense_breakdown" >
                 <!-- Parent activity meta-data to support 4.0 and lower -->
                 <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
@@ -28,7 +28,7 @@
 
         <activity
             android:name=".CategoriesActivity"
-            android:label="@string/app_name" >
+            android:label="@string/main_header_categories" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -37,7 +37,7 @@
 
         <activity
             android:name=".RecentSpendingActivity"
-            android:label="@string/app_name" >
+            android:label="@string/main_header_recent_spending" >
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
