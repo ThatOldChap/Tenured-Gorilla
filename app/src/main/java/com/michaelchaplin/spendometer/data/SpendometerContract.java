@@ -10,7 +10,7 @@ public final class SpendometerContract {
     private SpendometerContract() {};
 
     // Content authority string for URIs
-    private static final String CONTENT_AUTHORITY = "com.michaelchaplin.spendometer.data";
+    public static final String CONTENT_AUTHORITY = "com.michaelchaplin.spendometer.data";
 
     // Base Content authority string for URIs
     private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
@@ -18,7 +18,7 @@ public final class SpendometerContract {
     // ************************** Categories ******************************
 
     // Table name for the path of the Categories Uri
-    private static final String PATH_CATEGORIES = "categories";
+    public static final String PATH_CATEGORIES = "categories";
 
     // Inner class that defines the constant values for the categories database table.
     // Each entry represents a single category

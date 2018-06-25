@@ -44,6 +44,11 @@
                 android:value=".MainActivity" />
         </activity>
 
+        <provider
+            android:authorities="com.michaelchaplin.spendometer"
+            android:name=".data.SpendometerProvider"
+            android:exported="false" />
+
     </application>
 
 </manifest>
