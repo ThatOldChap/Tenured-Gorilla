@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,8 +46,8 @@
         </activity>
 
         <provider
-            android:authorities="com.michaelchaplin.spendometer"
-            android:name=".data.SpendometerProvider"
+            android:authorities="com.michaelchaplin.spendometer.data"
+            android:name="com.michaelchaplin.spendometer.data.SpendometerProvider"
             android:exported="false" />
 
     </application>

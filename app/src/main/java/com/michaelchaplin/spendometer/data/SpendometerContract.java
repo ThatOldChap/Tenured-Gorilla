@@ -7,7 +7,7 @@ import android.provider.BaseColumns;
 public final class SpendometerContract {
 
     // Prevent someone from initializing this class accidentally
-    private SpendometerContract() {};
+    private SpendometerContract() {}
 
     // Content authority string for URIs
     public static final String CONTENT_AUTHORITY = "com.michaelchaplin.spendometer.data";

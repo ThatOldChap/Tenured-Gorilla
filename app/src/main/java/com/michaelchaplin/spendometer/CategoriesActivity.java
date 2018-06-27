@@ -1,16 +1,27 @@
 package com.michaelchaplin.spendometer;
 
+import android.content.ContentValues;
+import android.net.Uri;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.michaelchaplin.spendometer.data.SpendometerContract;
+
+import org.w3c.dom.Text;
+
+import static com.michaelchaplin.spendometer.data.SpendometerProvider.LOG_TAG;
 
 public class CategoriesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -40,14 +51,79 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
         View emptyView = findViewById(R.id.empty_view_categories);
         categoryListView.setEmptyView(emptyView);
 
+        Log.d(LOG_TAG, "Setting emptyView for the ListView");
+
         // Setup a CategoryCursorAdapter to create a list item for each category/row in the Cursor
         // FYI, there is no category data yet (until the load finished) so set teh passed in Cursor to null
         mCursorAdapter = new CategoryCursorAdapter(this, null);
         categoryListView.setAdapter(mCursorAdapter);
 
+        Log.d(LOG_TAG, "CursorAdapter set to ListView");
+
         // Prepare the loader by either reconnecting with an existing one or starting a new one
         getSupportLoaderManager().initLoader(CATEGORY_LOADER, null, this);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu) {
+
+        // Inflate the menu options from the res/menu/menu_categories.xml file
+        // This also adds menu items to the app bar
+        getMenuInflater().inflate(R.menu.menu_categories, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item) {
+
+        // User clicked on a menu option in the app bar overflow menu
+        switch (item.getItemId()) {
+
+            // Respond to a click on the "Insert dummy data" menu option
+            case R.id.action_insert_dummy_data:
+                insertCategory();
+                Log.d(LOG_TAG, "ran insertCategory()");
+                return true;
+
+            // Respond to a click on the "Delete All Entries" menu option
+            case R.id.action_delete_all_entries:
+                deleteAllCategories();
+                Log.d(LOG_TAG, "ran deleteAllCategories()");
+                return true;
+
+            case android.R.id.home:
+
+                // Navigate up to parent activity which is the Main Activity
+                NavUtils.navigateUpFromSameTask(CategoriesActivity.this);
+                return true;
+
+            default:
+
+                // Invoke the super class if no button is clicked
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    // Helper method to add a dummy category in the database
+    private void insertCategory() {
+
+        // Create a ContentValues object where the column names are the keys and the attributes are the values
+        ContentValues values = new ContentValues();
+        values.put(SpendometerContract.CategoryEntry.COL_NAME, "Big Rig Eatery");
+
+        // Insert a new row into the Provider via the ContentResolver
+        // Use the CATEGORY_CONTENT_URI to indicate that we want to insert a category into the table
+        // This also receives the new content URI that will allow us to access the Categories table data in the future
+        getContentResolver().insert(SpendometerContract.CategoryEntry.CATEGORY_CONTENT_URI, values);
+    }
+
+    // Helper method to delete all the categories in the database
+    private void deleteAllCategories() {
+
+        // Uses the ContentResolver to delete return how many rows were deleted in the database
+        int rowsDeleted = getContentResolver().delete(SpendometerContract.CategoryEntry.CATEGORY_CONTENT_URI, null, null);
+        Log.d(LOG_TAG, rowsDeleted + " rows deleted from the Categories database");
     }
 
     @Override
@@ -65,7 +141,9 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
                 SpendometerContract.CategoryEntry.COL_NAME
         };
 
-        // Returns teh CursorLoader that will execute the ContentProvider's query method on a background thread
+        Log.d(LOG_TAG, "About to run cursor loader");
+
+        // Returns the CursorLoader that will execute the ContentProvider's query method on a background thread
         return new CursorLoader(
                 this,
                 SpendometerContract.CategoryEntry.CATEGORY_CONTENT_URI,
@@ -80,6 +158,7 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         // Update the CategoryCursorAdapter with this new cursor containing the updated Category data
         mCursorAdapter.swapCursor(cursor);
+        Log.d(LOG_TAG, "Finished swapping cursor in onLoadFinished");
     }
 
     @Override

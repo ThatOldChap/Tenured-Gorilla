@@ -36,7 +36,7 @@ public class SpendometerProvider extends ContentProvider {
         sUriMatcher.addURI(SpendometerContract.CONTENT_AUTHORITY, SpendometerContract.PATH_CATEGORIES, CATEGORIES);
 
         // Maps the integer CATEGORIES_ID to provide access to a single row of the Categories table
-        sUriMatcher.addURI(SpendometerContract.CONTENT_AUTHORITY, SpendometerContract.PATH_CATEGORIES, CATEGORIES_ID);
+        sUriMatcher.addURI(SpendometerContract.CONTENT_AUTHORITY, SpendometerContract.PATH_CATEGORIES + "/#", CATEGORIES_ID);
     }
 
 
@@ -57,8 +57,7 @@ public class SpendometerProvider extends ContentProvider {
         SQLiteDatabase database = mDbHelper.getReadableDatabase();
 
         // Create a cursor to get an image of the database on the projection
-        Cursor cursor = null;
-
+        Cursor cursor;
         // Obtain an integer that represents the case of the URI
         int match = sUriMatcher.match(uri);
 
@@ -82,6 +81,7 @@ public class SpendometerProvider extends ContentProvider {
                 // Create a string that forces the selection to be an integer to choose a row in the table
                 selection = SpendometerContract.CategoryEntry._ID + "=?";
 
+                Log.d(LOG_TAG, "match = " + match + " -- uri = " + uri);
                 // Take the selected table columns that the user wants to query
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 

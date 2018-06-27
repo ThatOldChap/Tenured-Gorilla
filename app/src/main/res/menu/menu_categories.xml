@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".CategoriesActivity">
+
+    <!-- Setting up the delete button on the action bar -->
+    <item
+        android:id="@+id/action_delete_all_entries"
+        android:title="@string/delete_all_entries"
+        app:showAsAction="never" />
+
+    <!-- Setting up the insert dummy data button on the action bar -->
+    <item
+        android:id="@+id/action_insert_dummy_data"
+        android:title="@string/insert_dummy_data"
+        app:showAsAction="never" />
+
+</menu>

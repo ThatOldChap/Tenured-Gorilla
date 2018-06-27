@@ -6,5 +6,8 @@
     <string name="add_new_category">Add New Category</string>
     <string name="category_name">Category Name</string>
     <string name="empty_category_text">No Categories To Show!</string>
+    <string name="delete_all_entries">Delete All Entries</string>
+    <string name="insert_dummy_data">Insert Dummy Data</string>
+
 
 </resources>
