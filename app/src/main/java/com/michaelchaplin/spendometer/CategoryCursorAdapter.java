@@ -53,7 +53,7 @@ public class CategoryCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
 
         // Finds the fields that need to be populated in the inflated template
-        TextView categoryNameTextView = view.findViewById(R.id.list_view_item_category);
+        TextView categoryNameTextView = view.findViewById(R.id.list_view_item_category_name);
 
         // Extract the properties from the cursor
         String categoryName = cursor.getString(cursor.getColumnIndexOrThrow("name"));

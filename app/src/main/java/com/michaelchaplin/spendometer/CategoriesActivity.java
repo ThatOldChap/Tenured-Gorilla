@@ -44,6 +44,20 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
             ab.setHomeButtonEnabled(true);
         }
 
+        // Find the TextView that corresponds to the Add New Category button
+        final TextView newCategoryButton = findViewById(R.id.add_new_category);
+
+        // Setup an onClickListener to find when the button has been pressed
+        newCategoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Add a new category to this list when the button is pressed
+                insertCategory();
+            }
+        });
+
+
         // Find the ListView that populates the Category data
         ListView categoryListView = findViewById(R.id.list_view_categories);
 
