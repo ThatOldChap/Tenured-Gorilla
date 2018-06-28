@@ -51,7 +51,7 @@
 
         <activity
             android:name=".CategoryEditorActivity"
-            android:label="@string/category_name">
+            android:label="@string/edit_category">
 
         <!-- Parent activity meta-data to support 4.0 and lower -->
         <meta-data
