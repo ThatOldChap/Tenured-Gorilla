@@ -1,6 +1,8 @@
 package com.michaelchaplin.spendometer;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -73,6 +76,26 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
         categoryListView.setAdapter(mCursorAdapter);
 
         Log.d(LOG_TAG, "CursorAdapter set to ListView");
+
+        // Setup an item click listener for each individual category in the ListView
+        categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                // Create a new intent to go the CategoryEditorActivity
+                Intent intent = new Intent(CategoriesActivity.this, CategoryEditorActivity.class);
+
+                // Create a Uri that represents the category that was click on, identified by the "id"
+                Uri currentCategoryUri = ContentUris.withAppendedId(SpendometerContract.CategoryEntry.CATEGORY_CONTENT_URI, id);
+
+                // Pass the Uri to the CategoryEditorActivity as a part of the Intent
+                intent.setData(currentCategoryUri);
+
+                // Launch the CategoryEditorActivity to display the current data for the chosen Category
+                startActivity(intent);
+            }
+        });
 
         // Prepare the loader by either reconnecting with an existing one or starting a new one
         getSupportLoaderManager().initLoader(CATEGORY_LOADER, null, this);

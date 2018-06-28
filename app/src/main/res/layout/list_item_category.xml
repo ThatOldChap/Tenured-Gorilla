@@ -22,7 +22,6 @@
             android:paddingLeft="8dp"
             android:background="@color/colorPrimary"
             android:contentDescription="@string/content_description_category_icon"
-
             android:src="@mipmap/ic_launcher" />
 
         <!-- TextView for the individual TextViews that will be populating the ListView -->

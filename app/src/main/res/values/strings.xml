@@ -9,6 +9,6 @@
     <string name="delete_all_entries">Delete All Entries</string>
     <string name="insert_dummy_data">Insert Dummy Data</string>
     <string name="content_description_category_icon">Icon for the category</string>
-
+    <string name="edit_category">Edit Category</string>
 
 </resources>

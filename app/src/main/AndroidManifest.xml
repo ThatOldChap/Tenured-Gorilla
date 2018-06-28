@@ -9,27 +9,40 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <provider
+            android:name=".data.SpendometerProvider"
+            android:authorities="com.michaelchaplin.spendometer.data"
+            android:exported="false" />
+
         <activity
             android:name=".ExpenseListActivity"
-            android:label="@string/main_header_expense_breakdown" >
-                <!-- Parent activity meta-data to support 4.0 and lower -->
-                <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".MainActivity" />
-        </activity>
+            android:label="@string/main_header_expense_breakdown">
 
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity
             android:name=".CategoriesActivity"
-            android:label="@string/main_header_categories" >
+            android:label="@string/main_header_categories">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".RecentSpendingActivity"
+            android:label="@string/main_header_recent_spending">
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -37,18 +50,14 @@
         </activity>
 
         <activity
-            android:name=".RecentSpendingActivity"
-            android:label="@string/main_header_recent_spending" >
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
+            android:name=".CategoryEditorActivity"
+            android:label="@string/category_name">
 
-        <provider
-            android:authorities="com.michaelchaplin.spendometer.data"
-            android:name="com.michaelchaplin.spendometer.data.SpendometerProvider"
-            android:exported="false" />
+        <!-- Parent activity meta-data to support 4.0 and lower -->
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".CategoriesActivity" />
+        </activity>
 
     </application>
 
