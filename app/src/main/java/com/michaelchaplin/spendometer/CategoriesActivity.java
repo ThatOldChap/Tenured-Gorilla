@@ -22,8 +22,6 @@ import android.widget.TextView;
 
 import com.michaelchaplin.spendometer.data.SpendometerContract;
 
-import org.w3c.dom.Text;
-
 import static com.michaelchaplin.spendometer.data.SpendometerProvider.LOG_TAG;
 
 public class CategoriesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -60,7 +58,6 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
             }
         });
 
-
         // Find the ListView that populates the Category data
         ListView categoryListView = findViewById(R.id.list_view_categories);
 
@@ -71,7 +68,7 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
         Log.d(LOG_TAG, "Setting emptyView for the ListView");
 
         // Setup a CategoryCursorAdapter to create a list item for each category/row in the Cursor
-        // FYI, there is no category data yet (until the load finished) so set teh passed in Cursor to null
+        // FYI, there is no category data yet (until the load finished) so set the passed in Cursor to null
         mCursorAdapter = new CategoryCursorAdapter(this, null);
         categoryListView.setAdapter(mCursorAdapter);
 
