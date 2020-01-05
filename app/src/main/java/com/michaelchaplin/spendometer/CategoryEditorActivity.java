@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.michaelchaplin.spendometer.data.SpendometerContract;
@@ -30,12 +31,13 @@ import java.util.ArrayList;
 
 import static com.michaelchaplin.spendometer.data.SpendometerProvider.LOG_TAG;
 
-public class CategoryEditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CategoryEditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, CategoryIconAdapter.OnIconListener {
 
     // Global variables to store the data for a new Category
     private EditText mCategoryNameEditText;
+    private ImageView mCategoryImageIcon;
     public RecyclerView mCategoryIconRecyclerView;
-    ArrayList<CategoryIconData> arrayList = new ArrayList<>();
+    ArrayList<CategoryIconDataModel> arrayList = new ArrayList<>();
 
     // Identifier used to initialize the Loader if the content URI is not null (ie. is a new category)
     public static final int EXISTING_CATEGORY_LOADER = 1;
@@ -69,12 +71,16 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         // Find all relevant views for input fields to see if they have been modified
         mCategoryNameEditText = findViewById(R.id.category_name_edit_text);
         mCategoryIconRecyclerView = findViewById(R.id.category_icon_recycler_view);
-        arrayList.add(new CategoryIconData("Icon 1", R.drawable.category_icon_1));
-        arrayList.add(new CategoryIconData("Icon 2", R.drawable.ic_launcher_background));
-        arrayList.add(new CategoryIconData("Icon 3", R.drawable.ic_launcher_foreground));
-        arrayList.add(new CategoryIconData("Icon 4", R.drawable.category_icon_1));
-        arrayList.add(new CategoryIconData("Icon 5", R.drawable.ic_launcher_background));
-        arrayList.add(new CategoryIconData("Icon 6", R.drawable.ic_launcher_foreground));
+        mCategoryImageIcon = findViewById(R.id.category_icon_image);
+
+        // Construct the arrayList of CategoryIconDataModels to populate the list of available icons
+        for (int i = 0; i < CategoryIconData.iconArray.length; i++){
+            arrayList.add(new CategoryIconDataModel(
+               CategoryIconData.nameArray[i],
+               CategoryIconData.iconArray[i],
+               CategoryIconData.id_[i]
+            ));
+        }
 
         // Setup onTouchListener for the input fields to see if they have been modified
         View.OnTouchListener mTouchListener = new View.OnTouchListener(){
@@ -86,13 +92,15 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
             }
         };
 
+        // Setting a Touch Listener on the CategoryNameEditText to use as a "changes made" flag
         mCategoryNameEditText.setOnTouchListener(mTouchListener);
 
-        CategoryIconAdapter mAdapter = new CategoryIconAdapter(this, arrayList);
+        // Defining the adapter for the RecyclerView
+        CategoryIconAdapter mAdapter = new CategoryIconAdapter(this, arrayList, this);
         mCategoryIconRecyclerView.setAdapter(mAdapter);
 
         // Fixes the size of the RecyclerView to improve performance
-        // mCategoryIconRecyclerView.setHasFixedSize(true);
+        mCategoryIconRecyclerView.setHasFixedSize(true);
 
         // Specify a Grid Layout Manager for the RecyclerView
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2,GridLayoutManager.VERTICAL,false);
@@ -340,6 +348,18 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
             }
         }
         finish(); // Close the activity
+    }
+
+    @Override
+    public void onIconClick(int position) {
+
+        String name = arrayList.get(position).getIconName();
+        int icon = arrayList.get(position).getIconDrawable();
+        int id_ = arrayList.get(position).getId();
+        Log.d(LOG_TAG, "OnIconClick: clicked position " + position);
+        Log.d(LOG_TAG, "Name: " + name + ", Icon ID: " + icon + ", id_: " + id_);
+
+        mCategoryImageIcon.setImageResource(icon);
     }
 
 

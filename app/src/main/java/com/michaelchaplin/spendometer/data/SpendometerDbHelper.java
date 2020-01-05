@@ -27,7 +27,8 @@ public class SpendometerDbHelper extends SQLiteOpenHelper {
         // Create a String that contains the SQL ststement to create the Categories table
         String SQL_CREATE_CATEGORIES_TABLE = "CREATE TABLE " + SpendometerContract.CategoryEntry.TABLE_NAME_CATEGORIES + " ("
                 + SpendometerContract.CategoryEntry._ID + " INTEGER PRIMARY KEY, "
-                + SpendometerContract.CategoryEntry.COL_NAME + " TEXT NOT NULL);";
+                + SpendometerContract.CategoryEntry.COL_NAME + " TEXT NOT NULL, "
+                + SpendometerContract.CategoryEntry.COL_ICON_ID + " INTEGER NOT NULL);";
 
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_CATEGORIES_TABLE);

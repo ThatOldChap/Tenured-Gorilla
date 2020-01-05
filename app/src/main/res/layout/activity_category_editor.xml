@@ -19,16 +19,17 @@
         android:hint="Category Name"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/category_icon_edit_text"
+        app:layout_constraintStart_toEndOf="@+id/category_icon_image"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/category_icon_edit_text"
+        android:id="@+id/category_icon_image"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_marginLeft="32dp"
         android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
         android:layout_marginTop="32dp"
+        android:background="@color/colorAccent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="?android:attr/actionModePasteDrawable" />
@@ -36,9 +37,11 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/category_icon_recycler_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/category_name_edit_text" />

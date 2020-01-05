@@ -43,6 +43,10 @@ public final class SpendometerContract {
         // TYPE = TEXT
         public static final String COL_NAME = "name";
 
+        // Drawable ID of the icon for the category
+        // TYPE = INT
+        public static final String COL_ICON_ID = "icon_id";
+
     }
 
 }
