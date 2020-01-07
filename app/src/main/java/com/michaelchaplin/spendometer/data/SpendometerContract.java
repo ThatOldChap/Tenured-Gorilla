@@ -15,6 +15,9 @@ public final class SpendometerContract {
     // Base Content authority string for URIs
     private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
+    // String for Upgrading the database from version 1 to 2
+    public static final String DATABASE_ALTER_CATEGORIES_V1_TO_V2 = "ALTER TABLE " +  CategoryEntry.TABLE_NAME_CATEGORIES + " ADD COLUMN " + CategoryEntry.COL_ICON_ID + " string;";
+
     // ************************** Categories ******************************
 
     // Table name for the path of the Categories Uri

@@ -2,7 +2,6 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark">
@@ -10,18 +9,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_marginBottom="8dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- TextView for the individual TextViews that will be populating the ListView -->
+        <!-- ImageView for the individual ImageViews that will be populating the ListView -->
         <ImageView
             android:id="@+id/list_view_item_category_icon"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingLeft="8dp"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorAccent"
             android:contentDescription="@string/content_description_category_icon"
+            android:paddingStart="8dp"
+            android:paddingLeft="8dp"
+            android:paddingEnd="8dp"
             android:src="@mipmap/ic_launcher" />
 
         <!-- TextView for the individual TextViews that will be populating the ListView -->

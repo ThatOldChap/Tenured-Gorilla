@@ -148,6 +148,9 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
         // Create a ContentValues object where the column names are the keys and the attributes are the values
         ContentValues values = new ContentValues();
         values.put(SpendometerContract.CategoryEntry.COL_NAME, "Big Rig Eatery");
+        values.put(SpendometerContract.CategoryEntry.COL_ICON_ID, R.drawable.category_icon_1);
+
+        // TODO: Add fake data with category names and icon in using CategoryIconData
 
         // Insert a new row into the Provider via the ContentResolver
         // Use the CATEGORY_CONTENT_URI to indicate that we want to insert a category into the table
@@ -175,7 +178,8 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
         // Defines a projection that specifies the columns from the table that should be loaded
         String[] projection = {
                 SpendometerContract.CategoryEntry._ID,
-                SpendometerContract.CategoryEntry.COL_NAME
+                SpendometerContract.CategoryEntry.COL_NAME,
+                SpendometerContract.CategoryEntry.COL_ICON_ID
         };
 
         Log.d(LOG_TAG, "About to run cursor loader");

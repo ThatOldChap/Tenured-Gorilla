@@ -38,6 +38,7 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
     private ImageView mCategoryImageIcon;
     public RecyclerView mCategoryIconRecyclerView;
     ArrayList<CategoryIconDataModel> arrayList = new ArrayList<>();
+    private int mIconIDClicked = 0;
 
     // Identifier used to initialize the Loader if the content URI is not null (ie. is a new category)
     public static final int EXISTING_CATEGORY_LOADER = 1;
@@ -45,7 +46,7 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
     // Content URI for storing the existing category. It will be null if it is a new category
     private Uri mCurrentCategoryUri;
 
-    // Boolean flag that keeps track of if a category has already been edited
+    // Boolean flags to keep track of if fields were already edited/touched
     public boolean mCategoryHasChanged = false;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -72,6 +73,8 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         mCategoryNameEditText = findViewById(R.id.category_name_edit_text);
         mCategoryIconRecyclerView = findViewById(R.id.category_icon_recycler_view);
         mCategoryImageIcon = findViewById(R.id.category_icon_image);
+
+        //mCategoryImageIcon.setImageResource(android.R.drawable.ic_input_add);
 
         // Construct the arrayList of CategoryIconDataModels to populate the list of available icons
         for (int i = 0; i < CategoryIconData.iconArray.length; i++){
@@ -119,11 +122,12 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         String nameString = mCategoryNameEditText.getText().toString().trim();
 
         // Check if the mCategoryNameEditText field is blank and return to the CategoryActivity with no changes
-        if(mCurrentCategoryUri == null && TextUtils.isEmpty(nameString)){return;}
+        if(mCurrentCategoryUri == null && TextUtils.isEmpty(nameString) && mIconIDClicked == 0){return;}
 
         // Creates a new ContentValues object to store the new column name
         ContentValues values = new ContentValues();
         values.put(SpendometerContract.CategoryEntry.COL_NAME, nameString);
+        values.put(SpendometerContract.CategoryEntry.COL_ICON_ID, mIconIDClicked);
 
         // Determine if this is a new or existing category
         if (mCurrentCategoryUri == null) {
@@ -134,9 +138,9 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
             Log.d(LOG_TAG, "Uri for new category is: " + newUri);
 
             if(newUri == null) {
-                Toast.makeText(this, "Insertion failed",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Insertion failed, Uri is null",Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Insertion successful",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Insertion successful, Uri is valid",Toast.LENGTH_SHORT).show();
             }
         } else {
 
@@ -180,8 +184,9 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
 
                 String nameString = mCategoryNameEditText.getText().toString().trim();
 
-                if(TextUtils.isEmpty(nameString)){
-                    Toast.makeText(this, "Please fill in a name for the Category", Toast.LENGTH_SHORT).show();
+                if(TextUtils.isEmpty(nameString) || !mCategoryHasChanged){
+                    // Add a toast to indicate that remaining fields need to be entered
+                    Toast.makeText(this, "Please fill out remaining fields", Toast.LENGTH_SHORT).show();
                 } else {
                     saveCategory();
                     finish(); // Exits the activity to return to CategoryActivity
@@ -248,7 +253,8 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         // Defines a projection that contains all the columns from the Categories table
         String[] projection = {
                 SpendometerContract.CategoryEntry._ID,
-                SpendometerContract.CategoryEntry.COL_NAME
+                SpendometerContract.CategoryEntry.COL_NAME,
+                SpendometerContract.CategoryEntry.COL_ICON_ID
         };
 
         // This loader executes the ContentProvider's query method
@@ -268,12 +274,15 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
 
             // Find the names of the columns of the attributes that may be changing
             int nameColumnIndex = data.getColumnIndex(SpendometerContract.CategoryEntry.COL_NAME);
+            int iconColumnIndex = data.getColumnIndex(SpendometerContract.CategoryEntry.COL_ICON_ID);
 
             // Extract the value from the cursor for a given column index
             String categoryName = data.getString(nameColumnIndex);
+            int categoryIconID = data.getInt(iconColumnIndex);
 
             // Update the views on the screen with the new data from the database
             mCategoryNameEditText.setText(categoryName);
+            mCategoryImageIcon.setImageResource(categoryIconID);
         }
 
     }
@@ -282,6 +291,7 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
     public void onLoaderReset(Loader<Cursor> loader) {
         // If the loader is invalidated, clear out all the data from the input fields
         mCategoryNameEditText.setText("");
+        // mCategoryImageIcon.setImageResource(android.R.drawable.ic_input_add); TODO: Delete if necessary
     }
 
     // Prompt for the user to confirm that they want to delete the category
@@ -353,14 +363,22 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
     @Override
     public void onIconClick(int position) {
 
+        // Finds the values of the CategoryIconData item at the position of the clicked item
         String name = arrayList.get(position).getIconName();
-        int icon = arrayList.get(position).getIconDrawable();
         int id_ = arrayList.get(position).getId();
-        Log.d(LOG_TAG, "OnIconClick: clicked position " + position);
-        Log.d(LOG_TAG, "Name: " + name + ", Icon ID: " + icon + ", id_: " + id_);
+        mIconIDClicked = arrayList.get(position).getIconDrawable();
 
-        mCategoryImageIcon.setImageResource(icon);
+
+        // Sets the preview image beside the EditText
+        mCategoryImageIcon.setImageResource(mIconIDClicked);
+
+        // Activates the onTouchListener that an icon has been clicked
+        mCategoryHasChanged = true;
+
+        Log.d(LOG_TAG, "OnIconClick: clicked position " + position + " and change flag is: " + mCategoryHasChanged);
+        Log.d(LOG_TAG, "OnIconClick: Name: " + name + ", Icon ID: " + mIconIDClicked + ", id_: " + id_);
     }
+
 
 
 }

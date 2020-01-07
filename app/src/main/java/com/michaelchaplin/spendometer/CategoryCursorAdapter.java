@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -54,12 +55,14 @@ public class CategoryCursorAdapter extends CursorAdapter {
 
         // Finds the fields that need to be populated in the inflated template
         TextView categoryNameTextView = view.findViewById(R.id.list_view_item_category_name);
+        ImageView categoryIconImageView = view.findViewById(R.id.list_view_item_category_icon);
 
         // Extract the properties from the cursor
         String categoryName = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+        int categoryIconID = cursor.getInt(cursor.getColumnIndexOrThrow("icon_id"));
 
         // Populate the list item's fields with the extracted properties
         categoryNameTextView.setText(categoryName);
-
+        categoryIconImageView.setImageResource(categoryIconID);
     }
 }
