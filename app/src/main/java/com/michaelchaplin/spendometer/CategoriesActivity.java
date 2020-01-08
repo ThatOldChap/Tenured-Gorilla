@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import com.michaelchaplin.spendometer.data.SpendometerContract;
 
+import java.util.ArrayList;
+
 import static com.michaelchaplin.spendometer.data.SpendometerProvider.LOG_TAG;
 
 public class CategoriesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -119,7 +121,7 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
 
             // Respond to a click on the "Insert dummy data" menu option
             case R.id.action_insert_dummy_data:
-                insertCategory();
+                insertDummyData();
                 Log.d(LOG_TAG, "ran insertCategory()");
                 return true;
 
@@ -143,19 +145,19 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
     }
 
     // Helper method to add a dummy category in the database
-    private void insertCategory() {
+    private void insertDummyData() {
 
         // Create a ContentValues object where the column names are the keys and the attributes are the values
         ContentValues values = new ContentValues();
-        values.put(SpendometerContract.CategoryEntry.COL_NAME, "Big Rig Eatery");
-        values.put(SpendometerContract.CategoryEntry.COL_ICON_ID, R.drawable.category_icon_1);
 
-        // TODO: Add fake data with category names and icon in using CategoryIconData
+        // Read and insert the data from CategoryIconData and put into a ContentValues
+        for (int i = 0; i < CategoryIconData.iconArray.length; i++){
+            values.put(SpendometerContract.CategoryEntry.COL_NAME, CategoryIconData.nameArray[i]);
+            values.put(SpendometerContract.CategoryEntry.COL_ICON_ID, CategoryIconData.iconArray[i]);
 
-        // Insert a new row into the Provider via the ContentResolver
-        // Use the CATEGORY_CONTENT_URI to indicate that we want to insert a category into the table
-        // This also receives the new content URI that will allow us to access the Categories table data in the future
-        getContentResolver().insert(SpendometerContract.CategoryEntry.CATEGORY_CONTENT_URI, values);
+            // Inserts a new row into the provider via the ContentResolver, the Uri of the Category table
+            getContentResolver().insert(SpendometerContract.CategoryEntry.CATEGORY_CONTENT_URI, values);
+        }
     }
 
     // Helper method to delete all the categories in the database
