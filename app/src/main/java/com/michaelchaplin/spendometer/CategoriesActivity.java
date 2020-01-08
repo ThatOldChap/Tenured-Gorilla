@@ -70,14 +70,10 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
         View emptyView = findViewById(R.id.empty_view_categories);
         categoryListView.setEmptyView(emptyView);
 
-        Log.d(LOG_TAG, "Setting emptyView for the ListView");
-
         // Setup a CategoryCursorAdapter to create a list item for each category/row in the Cursor
         // FYI, there is no category data yet (until the load finished) so set the passed in Cursor to null
         mCursorAdapter = new CategoryCursorAdapter(this, null);
         categoryListView.setAdapter(mCursorAdapter);
-
-        Log.d(LOG_TAG, "CursorAdapter set to ListView");
 
         // Setup an item click listener for each individual category in the ListView
         categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -101,7 +97,6 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
 
         // Prepare the loader by either reconnecting with an existing one or starting a new one
         getSupportLoaderManager().initLoader(CATEGORY_LOADER, null, this);
-
     }
 
     @Override
@@ -184,8 +179,6 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
                 SpendometerContract.CategoryEntry.COL_ICON_ID
         };
 
-        Log.d(LOG_TAG, "About to run cursor loader");
-
         // Returns the CursorLoader that will execute the ContentProvider's query method on a background thread
         return new CursorLoader(
                 this,
@@ -193,7 +186,7 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
                 projection,
                 null,
                 null,
-                null
+                "name asc"
         );
     }
 
