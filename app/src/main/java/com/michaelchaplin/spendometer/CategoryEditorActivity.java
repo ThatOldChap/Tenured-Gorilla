@@ -39,6 +39,7 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
     public RecyclerView mCategoryIconRecyclerView;
     ArrayList<CategoryIconDataModel> arrayList = new ArrayList<>();
     private int mIconIDClicked = 0;
+    private String mSavedCategoryName;
 
     // Identifier used to initialize the Loader if the content URI is not null (ie. is a new category)
     public static final int EXISTING_CATEGORY_LOADER = 1;
@@ -74,8 +75,6 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         mCategoryIconRecyclerView = findViewById(R.id.category_icon_recycler_view);
         mCategoryImageIcon = findViewById(R.id.category_icon_image);
 
-        //mCategoryImageIcon.setImageResource(android.R.drawable.ic_input_add);
-
         // Construct the arrayList of CategoryIconDataModels to populate the list of available icons
         for (int i = 0; i < CategoryIconData.iconArray.length; i++){
             arrayList.add(new CategoryIconDataModel(
@@ -106,7 +105,7 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         mCategoryIconRecyclerView.setHasFixedSize(true);
 
         // Specify a Grid Layout Manager for the RecyclerView
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2,GridLayoutManager.VERTICAL,false);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 3,GridLayoutManager.VERTICAL,false);
         mCategoryIconRecyclerView.setLayoutManager(layoutManager);
 
         // Prepare the loader be either reusing an existing loader or creating a new one
@@ -121,8 +120,10 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         // Read from the user edit field and trim the whitespace on the end
         String nameString = mCategoryNameEditText.getText().toString().trim();
 
+        Log.d(LOG_TAG, "saveCategory: nameString = " + nameString + " and mSavedCategoryName = " + mSavedCategoryName + " and mIconClicked = " + mIconIDClicked);
         // Check if the mCategoryNameEditText field is blank and return to the CategoryActivity with no changes
         if(mCurrentCategoryUri == null && TextUtils.isEmpty(nameString) && mIconIDClicked == 0){return;}
+        if(mCurrentCategoryUri != null && mSavedCategoryName.equals(nameString)){return;}
 
         // Creates a new ContentValues object to store the new column name
         ContentValues values = new ContentValues();
@@ -184,8 +185,9 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
 
                 String nameString = mCategoryNameEditText.getText().toString().trim();
 
-                if(TextUtils.isEmpty(nameString) || !mCategoryHasChanged){
+                if(TextUtils.isEmpty(nameString) || (!mCategoryHasChanged && !nameString.equals(mSavedCategoryName))){
                     // Add a toast to indicate that remaining fields need to be entered
+                    Log.d(LOG_TAG, "onOptionsItemSelected: mCategoryHasChanged = " + mCategoryHasChanged + " and nameString = " + nameString);
                     Toast.makeText(this, "Please fill out remaining fields", Toast.LENGTH_SHORT).show();
                 } else {
                     saveCategory();
@@ -283,6 +285,10 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
             // Update the views on the screen with the new data from the database
             mCategoryNameEditText.setText(categoryName);
             mCategoryImageIcon.setImageResource(categoryIconID);
+
+            // Setting up a flag to see if text is already in the field for the saveCategory() method
+            mSavedCategoryName = categoryName;
+            Log.d(LOG_TAG, "onLoadFinished: categoryName = " + mSavedCategoryName);
         }
 
     }
@@ -291,7 +297,6 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
     public void onLoaderReset(Loader<Cursor> loader) {
         // If the loader is invalidated, clear out all the data from the input fields
         mCategoryNameEditText.setText("");
-        // mCategoryImageIcon.setImageResource(android.R.drawable.ic_input_add); TODO: Delete if necessary
     }
 
     // Prompt for the user to confirm that they want to delete the category

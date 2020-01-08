@@ -201,13 +201,13 @@ public class SpendometerProvider extends ContentProvider {
         if (values.containsKey(SpendometerContract.CategoryEntry.COL_NAME)) {
             String name = values.getAsString(SpendometerContract.CategoryEntry.COL_NAME);
             if(name == null) {
-                throw new IllegalArgumentException("Category cannot be blank");
+                throw new IllegalArgumentException("Category name cannot be blank");
             }
         }
 
         int icon_id = values.getAsInteger(SpendometerContract.CategoryEntry.COL_ICON_ID);
         if (icon_id == 0) {
-            throw new IllegalArgumentException("Category name cannot be blank");
+            throw new IllegalArgumentException("Category icon cannot be blank");
         }
 
         // If there are no values to update, then don't try to update the database

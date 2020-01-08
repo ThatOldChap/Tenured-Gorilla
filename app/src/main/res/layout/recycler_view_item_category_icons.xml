@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/category_icon_image"
-        android:layout_width="144dp"
-        android:layout_height="144dp"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -27,9 +27,14 @@
         android:layout_height="24dp"
         android:background="@color/colorAccent"
         android:gravity="center_vertical"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
         android:text="Icon"
         android:textAlignment="center"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorPrimary"
+        app:autoSizeMaxTextSize="14sp"
+        app:autoSizeMinTextSize="10sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintEnd_toEndOf="@+id/category_icon_image"
         app:layout_constraintStart_toStartOf="@+id/category_icon_image"
         app:layout_constraintTop_toBottomOf="@+id/category_icon_image" />
