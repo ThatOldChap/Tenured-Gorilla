@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Create an intent to open the RecentSpending Activity
-                Intent recentSpendingIntent = new Intent(MainActivity.this, ExpenseListActivity.class);
+                Intent recentSpendingIntent = new Intent(MainActivity.this, RecentSpendingActivity.class);
 
                 // Starts the ExpenseListActivity
                 startActivity(recentSpendingIntent);
