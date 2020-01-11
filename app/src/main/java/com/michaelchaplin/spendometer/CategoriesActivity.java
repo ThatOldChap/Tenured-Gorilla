@@ -22,8 +22,6 @@ import android.widget.TextView;
 
 import com.michaelchaplin.spendometer.data.SpendometerContract;
 
-import java.util.ArrayList;
-
 import static com.michaelchaplin.spendometer.data.SpendometerProvider.LOG_TAG;
 
 public class CategoriesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
