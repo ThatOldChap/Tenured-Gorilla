@@ -29,20 +29,32 @@ public class SpendometerDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        // ****************************** Categories ************************************
         // Create a String that contains the SQL ststement to create the Categories table
         String SQL_CREATE_CATEGORIES_TABLE = "CREATE TABLE " + SpendometerContract.CategoryEntry.TABLE_NAME_CATEGORIES + " ("
                 + SpendometerContract.CategoryEntry._ID + " INTEGER PRIMARY KEY, "
                 + SpendometerContract.CategoryEntry.COL_NAME + " TEXT NOT NULL, "
                 + SpendometerContract.CategoryEntry.COL_ICON_ID + " INTEGER NOT NULL);";
 
-        // Clear the table if it already exists
+
+        // Create a String that contains the SQL statement to create the Expenses table
+        String SQL_CREATE_EXPENSES_TABLE = "CREATE TABLE " + SpendometerContract.ExpenseEntry.TABLE_NAME_EXPENSES + " ("
+                + SpendometerContract.ExpenseEntry._ID + " INTEGER PRIMARY KEY, "
+                + SpendometerContract.ExpenseEntry.COL_CATEGORY + " TEXT NOT NULL, "
+                + SpendometerContract.ExpenseEntry.COL_COST + " REAL NOT NULL, "
+                + SpendometerContract.ExpenseEntry.COL_DATE + " INTEGER NOT NULL, "
+                + SpendometerContract.ExpenseEntry.COL_NOTES + " TEXT NOT NULL, "
+                + SpendometerContract.ExpenseEntry.COL_ICON_ID + " INTEGER NOT NULL, "
+                + SpendometerContract.ExpenseEntry.COL_TYPE + " INTEGER NOT NULL);";
+
+        // Clear the tables if they already exist
         db.execSQL(CLEAR_TABLE + SpendometerContract.CategoryEntry.TABLE_NAME_CATEGORIES);
+        db.execSQL(CLEAR_TABLE + SpendometerContract.ExpenseEntry.TABLE_NAME_EXPENSES);
 
-        // Create the Categories table in the database
+        // Create the tables in the database
         db.execSQL(SQL_CREATE_CATEGORIES_TABLE);
+        db.execSQL(SQL_CREATE_EXPENSES_TABLE);
 
-        Log.d(LOG_TAG, "onCreate: Database created");
+        Log.d(LOG_TAG, "onCreate: Databases created");
     }
 
     @Override
