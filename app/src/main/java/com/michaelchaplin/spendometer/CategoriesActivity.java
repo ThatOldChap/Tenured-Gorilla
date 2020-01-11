@@ -53,9 +53,6 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
             @Override
             public void onClick(View view) {
 
-                // Add a new category to this list when the button is pressed
-                // insertCategory();
-
                 Intent newCategoryIntent = new Intent(CategoriesActivity.this,CategoryEditorActivity.class);
                 startActivity(newCategoryIntent);
             }

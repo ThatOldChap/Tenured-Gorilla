@@ -1,16 +1,22 @@
 package com.michaelchaplin.spendometer;
 
-import android.app.LoaderManager;
+import android.support.v4.app.LoaderManager;
 import android.content.Intent;
-import android.content.Loader;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 
-public class ExpenseListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+import java.util.ArrayList;
+
+import static com.michaelchaplin.spendometer.data.SpendometerProvider.LOG_TAG;
+
+public class ExpenseListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, ExpenseListAdapter.ExpenseTouchListener {
 
     // Identifier used to initialize the Loader if the content URI is not null (ie. is a new expense)
     public static final int EXPENSE_LOADER = 1;
@@ -20,6 +26,7 @@ public class ExpenseListActivity extends AppCompatActivity implements LoaderMana
 
     // Creating variables for all views within the activity
     private RecyclerView mExpenseListRecyclerView;
+    ArrayList<ExpenseDataModel> expenseDataList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +57,13 @@ public class ExpenseListActivity extends AppCompatActivity implements LoaderMana
         mExpenseListRecyclerView = findViewById(R.id.expense_list_recycler);
 
         // Defining the RecyclerView adapter characteristics
-        // ExpenseListAdapter mAdapter = new ExpenseListAdapter(this, a)
+        ExpenseListAdapter mAdapter = new ExpenseListAdapter(this, expenseDataList, this);
+        mExpenseListRecyclerView.setAdapter(mAdapter);
 
+        // Prepare the cursor loader by either reconnecting with an existing one or starting a new one
+        getSupportLoaderManager().initLoader(EXPENSE_LOADER, null, this);
 
-        }
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -67,6 +77,18 @@ public class ExpenseListActivity extends AppCompatActivity implements LoaderMana
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+
+    @Override
+    public void onExpenseClick(int position) {
 
     }
 }

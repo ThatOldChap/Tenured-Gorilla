@@ -1,7 +1,5 @@
 package com.michaelchaplin.spendometer;
 
-import android.graphics.drawable.Icon;
-
 public class ExpenseDataModel {
 
     // Defining the components of an Expense Item

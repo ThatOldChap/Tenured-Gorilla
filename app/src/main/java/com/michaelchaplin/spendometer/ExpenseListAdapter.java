@@ -79,12 +79,14 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
     @Override
     public void onBindViewHolder(ExpenseViewHolder holder, int position) {
 
+        // Updates the contents of the itemView with the data at the given position in mDataset
         holder.setExpenseData((ExpenseDataModel) mDataset.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        // Returns the number of Expenses in the mDataset ArrayList which is the size of the dataset
+        return mDataset.size();
     }
 
     public interface ExpenseTouchListener {
