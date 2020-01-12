@@ -44,7 +44,7 @@ public class SpendometerDbHelper extends SQLiteOpenHelper {
                 + SpendometerContract.ExpenseEntry.COL_DATE + " INTEGER NOT NULL, "
                 + SpendometerContract.ExpenseEntry.COL_NOTES + " TEXT NOT NULL, "
                 + SpendometerContract.ExpenseEntry.COL_ICON_ID + " INTEGER NOT NULL, "
-                + SpendometerContract.ExpenseEntry.COL_TYPE + " INTEGER NOT NULL);";
+                + SpendometerContract.ExpenseEntry.COL_ACCOUNT + " INTEGER NOT NULL);";
 
         // Clear the tables if they already exist
         db.execSQL(CLEAR_TABLE + SpendometerContract.CategoryEntry.TABLE_NAME_CATEGORIES);

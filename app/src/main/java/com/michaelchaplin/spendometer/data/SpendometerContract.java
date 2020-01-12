@@ -98,13 +98,9 @@ public final class SpendometerContract {
         public static final String COL_ICON_ID = "icon_id";
 
         // Type of payment method used for the expense
-        // Type: INT
-        public static final  String COL_TYPE = "type";
+        // Type: TEXT
+        public static final  String COL_ACCOUNT = "account";
 
-            public static final int TYPE_CASH = 0;
-            public static final int TYPE_CREDIT = 1;
-            public static final int TYPE_DEBIT = 2;
-            public static final int TYPE_OTHER = 3;
     }
 
 }
