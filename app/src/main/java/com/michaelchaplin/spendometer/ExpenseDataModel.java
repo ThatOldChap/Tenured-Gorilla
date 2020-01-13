@@ -5,11 +5,11 @@ public class ExpenseDataModel {
     // Defining the components of an Expense Item
     public String category,notes,account;
     public int icon;
-    public long date;
+    public int date;
     public double cost;
 
     // Constructor for the ExpenseDataModel class
-    public ExpenseDataModel (String Category, String Notes, int Icon, long Date, double Cost, String Account){
+    public ExpenseDataModel (String Category, String Notes, int Icon, int Date, double Cost, String Account){
 
         this.category = Category;
         this.notes = Notes;

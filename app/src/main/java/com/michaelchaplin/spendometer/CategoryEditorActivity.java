@@ -59,6 +59,7 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         // Examine the intent that was used to launch this activity
         Intent intent = getIntent();
         mCurrentCategoryUri = intent.getData();
+        Log.d(LOG_TAG, "onCreate: mCurrentCategoryUri = " +mCurrentCategoryUri);
 
         // Set the relevant title of the app bar based on a new or existing category
         if (mCurrentCategoryUri == null) {

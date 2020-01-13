@@ -2,6 +2,7 @@ package com.michaelchaplin.spendometer;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import static com.michaelchaplin.spendometer.data.SpendometerProvider.LOG_TAG;
 
 public class CategoryIconAdapter extends RecyclerView.Adapter<CategoryIconAdapter.MyViewHolder> {
 
@@ -68,6 +71,7 @@ public class CategoryIconAdapter extends RecyclerView.Adapter<CategoryIconAdapte
         // Get element from the mValues Array at the specified position
         // This will replace the contents of the view with that element
         holder.setData((CategoryIconDataModel) mValues.get(position));
+        Log.d(LOG_TAG, "onBindViewHolder: New data being bound at position " + position);
     }
 
     @Override

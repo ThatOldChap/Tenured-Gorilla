@@ -68,14 +68,14 @@ public class SpendometerProvider extends ContentProvider {
         // Find out which UriMatcher case the given Uri is
         switch (match) {
             case CATEGORIES:
-
+                Log.d(LOG_TAG, "query: Categories");
                 // Create a cursor of the whole Categories table
                 cursor = database.query(SpendometerContract.CategoryEntry.TABLE_NAME_CATEGORIES,
                         projection, selection, selectionArgs, null, null, sortOrder);
                 break;
 
             case CATEGORIES_ID:
-
+                Log.d(LOG_TAG, "query: Categories_ID");
                 // Create a string that forces the selection to be an integer to choose a row in the table
                 selection = SpendometerContract.CategoryEntry._ID + "=?";
 
@@ -88,14 +88,14 @@ public class SpendometerProvider extends ContentProvider {
                 break;
 
             case EXPENSES:
-
+                Log.d(LOG_TAG, "query: Expenses");
                 // Creates a cursor of the whole Expenses table
                 cursor = database.query(SpendometerContract.ExpenseEntry.TABLE_NAME_EXPENSES,
                         projection, selection, selectionArgs, null, null, sortOrder);
                 break;
 
             case EXPENSES_ID:
-
+                Log.d(LOG_TAG, "query: Expenses_ID");
                 // Create a string that forces the selection to be an integer to choose a row in the table
                 selection = SpendometerContract.ExpenseEntry._ID + "=?";
 

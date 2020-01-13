@@ -2,6 +2,7 @@ package com.michaelchaplin.spendometer;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import static com.michaelchaplin.spendometer.data.SpendometerProvider.LOG_TAG;
 
 public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.ExpenseViewHolder> {
 
@@ -20,12 +23,6 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
     public ExpenseListAdapter (Context context, ArrayList dataset, ExpenseTouchListener expenseTouchListener) {
         mContext = context;
         mDataset = dataset;
-        this.mExpenseTouchListener = expenseTouchListener;
-    }
-
-    // A constructor used if there is no dataset needed to be passed into the adapter
-    public ExpenseListAdapter (Context context, ExpenseTouchListener expenseTouchListener) {
-        mContext = context;
         this.mExpenseTouchListener = expenseTouchListener;
     }
 
@@ -54,6 +51,7 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
             expenseAccount = itemView.findViewById(R.id.expense_account);
             expenseCategoryIcon = itemView.findViewById(R.id.expense_category_icon);
 
+            Log.d(LOG_TAG, "ExpenseViewHolder: Views have been found");
             // Creates an sets an ExpenseTouchListener on the selected view
             this.expenseTouchListener = expenseTouchListener;
             itemView.setOnClickListener(this);
@@ -65,8 +63,8 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
 
             // Populates the ViewHolders with their Expense data
             expenseCategory.setText(Expense.category);
-            expenseDate.setText((int) Expense.date);
-            expenseCost.setText((int) Expense.cost);
+            expenseDate.setText(Integer.toString(Expense.date));
+            expenseCost.setText("$" + Double.toString(Expense.cost));
             expenseNotes.setText(Expense.notes);
             expenseAccount.setText(Expense.account);
             expenseCategoryIcon.setImageResource(Expense.icon);
@@ -81,6 +79,7 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
     @Override
     public ExpenseListAdapter.ExpenseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
+        Log.d(LOG_TAG, "onCreateViewHolder: Viewholder has been created");
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_item_expense, parent, false);
         return new ExpenseViewHolder(view, mExpenseTouchListener);
     }
@@ -89,12 +88,14 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
     public void onBindViewHolder(ExpenseViewHolder holder, int position) {
 
         // Updates the contents of the itemView with the data at the given position in mDataset
+        Log.d(LOG_TAG, "onBindViewHolder: Viewholder is being binded to data at position " + position);
         holder.setExpenseData((ExpenseDataModel) mDataset.get(position));
     }
 
     @Override
     public int getItemCount() {
         // Returns the number of Expenses in the mDataset ArrayList which is the size of the dataset
+        Log.d(LOG_TAG, "getItemCount: mDataset is " + mDataset.size() + " elements in size");
         return mDataset.size();
     }
 

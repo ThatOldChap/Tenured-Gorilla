@@ -1,5 +1,6 @@
 package com.michaelchaplin.spendometer;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.support.v4.app.LoaderManager;
 import android.content.Intent;
@@ -11,12 +12,11 @@ import android.net.Uri;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.michaelchaplin.spendometer.data.SpendometerContract;
 
@@ -24,22 +24,19 @@ import java.util.ArrayList;
 
 import static com.michaelchaplin.spendometer.data.SpendometerProvider.LOG_TAG;
 
-public class ExpenseListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, ExpenseListAdapter.ExpenseTouchListener {
+public class ExpenseListActivity extends AppCompatActivity implements  LoaderManager.LoaderCallbacks<Cursor>, ExpenseListAdapter.ExpenseTouchListener {
 
     // Identifier used to initialize the Loader if the content URI is not null (ie. is a new expense)
     public static final int EXPENSE_LOADER = 1;
 
     // Content URI for storing an existing expense. Will be null if it is a new expense
-    private Uri mCurrentExpenseUri;
+    public Uri mCurrentExpenseUri;
 
     // Creating variables for all views within the activity
-    public TextView mCategoryName;
-    public TextView mNotes;
-    public TextView mAccount;
-    public TextView mDate;
-    public TextView mCost;
-    public ImageView mIcon;
     public RecyclerView mExpenseListRecyclerView;
+
+    // Creating variables for the RecyclerView adapter
+    public ExpenseListAdapter mAdapter;
 
     ArrayList<ExpenseDataModel> expenseDataList = new ArrayList<>();
 
@@ -51,22 +48,15 @@ public class ExpenseListActivity extends AppCompatActivity implements LoaderMana
         // Examine the intent that was used to launch this activity
         Intent intent = getIntent();
         mCurrentExpenseUri = intent.getData();
-
-        // Set the relevant title of the app bar based on a new or existing expense
-        if(mCurrentExpenseUri == null){
-            setTitle("New Expense");
-            // TODO: add an invalidateOptionsMenu() method call
-        } else {
-            setTitle("Edit Expense");
-        }
+        Log.d(LOG_TAG, "onCreate: mCurrentExpenseUri = " + mCurrentExpenseUri);
 
         // Get a support ActionBar corresponding to this toolbar
-                ActionBar ab = getSupportActionBar();
-                // Enable the Up button
-                if(ab != null){
-                    ab.setDisplayHomeAsUpEnabled(true);
-                    ab.setHomeButtonEnabled(true);
-                }
+        ActionBar ab = getSupportActionBar();
+        // Enable the Up button
+        if(ab != null){
+            ab.setDisplayHomeAsUpEnabled(true);
+            ab.setHomeButtonEnabled(true);
+        }
 
         // Construct an expenseDataList of ExpenseDataModels to populate the RecyclerView
         /*for (int i = 0; i < expenseDataList.size(); i++){
@@ -82,10 +72,18 @@ public class ExpenseListActivity extends AppCompatActivity implements LoaderMana
 
         // Find all relevant views
         mExpenseListRecyclerView = findViewById(R.id.expense_list_recycler);
+        //mCategoryName = findViewById(R.id.expense_category);
 
         // Defining the RecyclerView adapter characteristics
-        ExpenseListAdapter mAdapter = new ExpenseListAdapter(this, this);
+        mAdapter = new ExpenseListAdapter(this, expenseDataList, this);
         mExpenseListRecyclerView.setAdapter(mAdapter);
+
+        // Fixes the side of the RecyclerView to improve performance
+        mExpenseListRecyclerView.setHasFixedSize(true);
+
+        // Specifying the layout manager for the RecyclerView
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mExpenseListRecyclerView.setLayoutManager(layoutManager);
 
         // Prepare the cursor loader by either reconnecting with an existing one or starting a new one
         getSupportLoaderManager().initLoader(EXPENSE_LOADER, null, this);
@@ -95,6 +93,7 @@ public class ExpenseListActivity extends AppCompatActivity implements LoaderMana
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 
+        Log.d(LOG_TAG, "onCreateLoader: Loading CursorLoader and mCurrentExpenseUri is " + mCurrentExpenseUri);
         // Defines a projection that contains all the columns from the Expenses table
         String[] projection = {
                 SpendometerContract.ExpenseEntry._ID,
@@ -106,8 +105,8 @@ public class ExpenseListActivity extends AppCompatActivity implements LoaderMana
                 SpendometerContract.ExpenseEntry.COL_ACCOUNT
         };
 
-        // This loader executes the ContentProvider's query method
-        return new CursorLoader(this, mCurrentExpenseUri, projection, null, null, null);
+        // This loader executes the ContentProvider's query method at the passed in Uri
+        return new CursorLoader(this, SpendometerContract.ExpenseEntry.EXPENSE_CONTENT_URI, projection, null, null, null);
     }
 
     @Override
@@ -118,8 +117,10 @@ public class ExpenseListActivity extends AppCompatActivity implements LoaderMana
             return;
         }
 
+        Log.d(LOG_TAG, "onLoadFinished: Cursor is not null");
         // Proceed with moving to the first row of the cursor and reading data from it
         if(cursor.moveToFirst()) {
+            Log.d(LOG_TAG, "onLoadFinished: Cursor moved to first row");
 
             // Find the names of the columns of the attributes that may be changing
             int categoryColumnIndex = cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_CATEGORY);
@@ -131,19 +132,21 @@ public class ExpenseListActivity extends AppCompatActivity implements LoaderMana
 
             // Extract the values from the cursor for a given column index
             String category = cursor.getString(categoryColumnIndex);
-            int cost = cursor.getInt(costColumnIndex);
-            String date = Double.toString(cursor.getDouble(dateColumnIndex));
+            String cost = Double.toString(cursor.getDouble(costColumnIndex));
+            int date = cursor.getInt(dateColumnIndex);
             String notes = cursor.getString(notesColumnIndex);
             int icon = cursor.getInt(iconColumnIndex);
             String account = cursor.getString(accountColumnIndex);
 
+            Log.d(LOG_TAG, "onLoadFinished: category = " + category);
             // Update the views with the new data from the database
-            mCategoryName.setText(category);
-            mCost.setText(cost);
-            mDate.setText(date);
-            mNotes.setText(notes);
-            mIcon.setImageResource(icon);
-            mAccount.setText(account);
+            //mCategoryName.setText(category);
+            //mCost.setText(cost);
+            //if(date == 9870055){mDate.setText("Jan 12-2020");}else{mDate.setText(date);}
+            //mDate.setText(date);
+            //mNotes.setText(notes);
+            //mIcon.setImageResource(icon);
+            //mAccount.setText(account);
         }
 
     }
@@ -151,6 +154,7 @@ public class ExpenseListActivity extends AppCompatActivity implements LoaderMana
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         // called when the loader is reset
+        Log.d(LOG_TAG, "onLoaderReset: Loader is invalidated");
     }
 
     @Override
@@ -194,11 +198,25 @@ public class ExpenseListActivity extends AppCompatActivity implements LoaderMana
         values.put(SpendometerContract.ExpenseEntry.COL_ICON_ID, R.drawable.round_fiber_new_white_48dp);
         values.put(SpendometerContract.ExpenseEntry.COL_ACCOUNT, "AMEX");
         values.put(SpendometerContract.ExpenseEntry.COL_NOTES, "Stan's Diner");
-        values.put(SpendometerContract.ExpenseEntry.COL_DATE, "Jan 12, 2020");
+        values.put(SpendometerContract.ExpenseEntry.COL_DATE, 9870055);
         values.put(SpendometerContract.ExpenseEntry.COL_COST, 15.47);
 
-        // Inserts a new row into the provider via the ContentResolver, the Uri of the Expenses table
-        getContentResolver().insert(SpendometerContract.ExpenseEntry.EXPENSE_CONTENT_URI, values);
+        expenseDataList.clear();
+        expenseDataList.add(new ExpenseDataModel(
+                values.getAsString(SpendometerContract.ExpenseEntry.COL_CATEGORY),
+                values.getAsString(SpendometerContract.ExpenseEntry.COL_NOTES),
+                values.getAsInteger(SpendometerContract.ExpenseEntry.COL_ICON_ID),
+                values.getAsInteger(SpendometerContract.ExpenseEntry.COL_DATE),
+                values.getAsDouble(SpendometerContract.ExpenseEntry.COL_COST),
+                values.getAsString(SpendometerContract.ExpenseEntry.COL_ACCOUNT)
+        ));
+
+        // Inserts a new row into the provider via the ContentResolver and returns the Uri of the Expenses table row
+        // Also notifies the adapter that there has been a change
+        Uri uri = getContentResolver().insert(SpendometerContract.ExpenseEntry.EXPENSE_CONTENT_URI, values);
+        int position = (int) ContentUris.parseId(uri);
+        mAdapter.notifyItemInserted(position);
+        Log.d(LOG_TAG, "insertDummyData: Data was inserted into the database at position: " + position);
     }
 
     private void deleteAllExpenses() {
@@ -215,5 +233,10 @@ public class ExpenseListActivity extends AppCompatActivity implements LoaderMana
     @Override
     public void onExpenseClick(int position) {
 
+        // Navigates to the ExpenseEditorActivity to edit the Expense at the position selected
+        Intent intent = new Intent(ExpenseListActivity.this, ExpenseEditorActivity.class);
+        Uri currentExpenseUri = ContentUris.withAppendedId(SpendometerContract.ExpenseEntry.EXPENSE_CONTENT_URI, position);
+        intent.setData(currentExpenseUri);
+        startActivity(intent);
     }
 }

@@ -172,6 +172,7 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
                 SpendometerContract.CategoryEntry.COL_ICON_ID
         };
 
+        Log.d(LOG_TAG, "onCreateLoader: Finished creating the loader");
         // Returns the CursorLoader that will execute the ContentProvider's query method on a background thread
         return new CursorLoader(
                 this,
@@ -193,6 +194,7 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+        Log.d(LOG_TAG, "onLoaderReset: Loader is being reset");
         // Callback called when the data needs to be deleted
         mCursorAdapter.swapCursor(null);
     }
