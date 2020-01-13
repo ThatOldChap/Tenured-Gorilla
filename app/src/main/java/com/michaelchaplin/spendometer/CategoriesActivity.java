@@ -112,13 +112,11 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
             // Respond to a click on the "Insert dummy data" menu option
             case R.id.action_insert_dummy_data:
                 insertDummyData();
-                Log.d(LOG_TAG, "ran insertCategory()");
                 return true;
 
             // Respond to a click on the "Delete All Entries" menu option
             case R.id.action_delete_all_entries:
                 deleteAllCategories();
-                Log.d(LOG_TAG, "ran deleteAllCategories()");
                 return true;
 
             case android.R.id.home:
@@ -153,7 +151,7 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
     // Helper method to delete all the categories in the database
     private void deleteAllCategories() {
 
-        // Uses the ContentResolver to delete return how many rows were deleted in the database
+        // Uses the ContentResolver to delete all categories and return how many rows were deleted in the database
         int rowsDeleted = getContentResolver().delete(SpendometerContract.CategoryEntry.CATEGORY_CONTENT_URI, null, null);
         Log.d(LOG_TAG, rowsDeleted + " rows deleted from the Categories database");
     }

@@ -297,6 +297,7 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
     public void onLoaderReset(Loader<Cursor> loader) {
         // If the loader is invalidated, clear out all the data from the input fields
         mCategoryNameEditText.setText("");
+        Log.d(LOG_TAG, "onLoaderReset: Loader is invalid");
     }
 
     // Prompt for the user to confirm that they want to delete the category

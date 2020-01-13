@@ -16,10 +16,16 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
     private Context mContext;
     private ExpenseTouchListener mExpenseTouchListener;
 
-    // The Constructor for the ExpenseList dataset
+    // A constructor used to pass in a dataset to the adapter
     public ExpenseListAdapter (Context context, ArrayList dataset, ExpenseTouchListener expenseTouchListener) {
         mContext = context;
         mDataset = dataset;
+        this.mExpenseTouchListener = expenseTouchListener;
+    }
+
+    // A constructor used if there is no dataset needed to be passed into the adapter
+    public ExpenseListAdapter (Context context, ExpenseTouchListener expenseTouchListener) {
+        mContext = context;
         this.mExpenseTouchListener = expenseTouchListener;
     }
 
@@ -30,6 +36,7 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
         private TextView expenseDate;
         private TextView expenseCost;
         private TextView expenseNotes;
+        private TextView expenseAccount;
         private ImageView expenseCategoryIcon;
         public ExpenseDataModel expense;
         ExpenseTouchListener expenseTouchListener;
@@ -44,6 +51,7 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
             expenseDate = itemView.findViewById(R.id.expense_date);
             expenseCost = itemView.findViewById(R.id.expense_cost);
             expenseNotes = itemView.findViewById(R.id.expense_notes);
+            expenseAccount = itemView.findViewById(R.id.expense_account);
             expenseCategoryIcon = itemView.findViewById(R.id.expense_category_icon);
 
             // Creates an sets an ExpenseTouchListener on the selected view
@@ -60,6 +68,7 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
             expenseDate.setText((int) Expense.date);
             expenseCost.setText((int) Expense.cost);
             expenseNotes.setText(Expense.notes);
+            expenseAccount.setText(Expense.account);
             expenseCategoryIcon.setImageResource(Expense.icon);
         }
 
