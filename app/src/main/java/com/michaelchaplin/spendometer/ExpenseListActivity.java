@@ -160,8 +160,7 @@ public class ExpenseListActivity extends AppCompatActivity implements  LoaderMan
         // Also notifies the adapter that there has been a change
         Uri uri = getContentResolver().insert(SpendometerContract.ExpenseEntry.EXPENSE_CONTENT_URI, values);
         int position = (int) ContentUris.parseId(uri);
-        mAdapter.notifyItemInserted(position);
-        Log.d(LOG_TAG, "insertDummyData: Data was inserted into the database at position: " + position);
+        Log.d(LOG_TAG, "insertDummyData: Data was inserted into the database at position: " + position + " at the uri: " + uri);
     }
 
     private void deleteAllExpenses() {

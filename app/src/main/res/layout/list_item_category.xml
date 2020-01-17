@@ -35,8 +35,6 @@
             android:text="@string/category_name"
             android:textColor="#FFFFFF"
             android:textSize="24sp" />
-
-
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

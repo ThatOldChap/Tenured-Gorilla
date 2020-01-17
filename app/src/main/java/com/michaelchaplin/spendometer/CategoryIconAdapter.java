@@ -71,7 +71,6 @@ public class CategoryIconAdapter extends RecyclerView.Adapter<CategoryIconAdapte
         // Get element from the mValues Array at the specified position
         // This will replace the contents of the view with that element
         holder.setData((CategoryIconDataModel) mValues.get(position));
-        Log.d(LOG_TAG, "onBindViewHolder: New data being bound at position " + position);
     }
 
     @Override

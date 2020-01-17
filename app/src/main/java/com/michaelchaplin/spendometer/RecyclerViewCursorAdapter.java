@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ViewGroup;
 
+import com.michaelchaplin.spendometer.data.SpendometerContract;
+
 import static com.michaelchaplin.spendometer.data.SpendometerProvider.LOG_TAG;
 
 
@@ -50,7 +52,7 @@ public abstract class RecyclerViewCursorAdapter<VH extends RecyclerView.ViewHold
         }
 
         // If the cursor is invalid, throw an error
-        if(mCursor.moveToPosition(position)){
+        if(!mCursor.moveToPosition(position)){
             throw new IllegalStateException("Cursor can't be moved to the given position: " + position);
         }
 
@@ -85,29 +87,26 @@ public abstract class RecyclerViewCursorAdapter<VH extends RecyclerView.ViewHold
 
         // Sets the oldCursor to be the cursor being swapped out
         Cursor oldCursor = mCursor;
+        mCursor = newCursor;
 
         // If the new cursor is valid, notify the adapter that the cursor has changed and swap cursors
         if(mCursor != null){
-            mCursor = newCursor;
             mDataValid = true;
+            mRowIDColumn = newCursor.getColumnIndexOrThrow(SpendometerContract.ExpenseEntry._ID);
             notifyDataSetChanged();
             Log.d(LOG_TAG, "swapCursor: newCursor is valid");
         } else {
             // If the cursor is not valid, notify the adapter that all the cursor's rows have been removed
             notifyItemRangeRemoved(0, getItemCount());
             // Clear the data in the newCursor
-            mCursor = null;
-            mRowIDColumn = -1;
             mDataValid = false;
+            mRowIDColumn = -1;
+            mCursor = null;
             Log.d(LOG_TAG, "swapCursor: newCursor is not valid");
         }
 
         return oldCursor;
     }
-
-
-
-
 
     @Override
     public int getItemCount() {
