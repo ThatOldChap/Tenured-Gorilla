@@ -16,7 +16,7 @@ public class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.O
     public TextView mNotes;
     public TextView mAccount;
     public ImageView mIcon;
-    RecyclerViewItemTouchListener mExpenseTouchListener;
+    private RecyclerViewItemTouchListener mExpenseTouchListener;
 
     // Constructor to add all the views into the ViewHolder for an expense
     public ExpenseViewHolder(View itemView, RecyclerViewItemTouchListener expenseTouchListener) {
@@ -33,7 +33,8 @@ public class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.O
         mIcon = itemView.findViewById(R.id.expense_category_icon);
 
         // Creates and sets an ExpenseTouchListener on the created ExpenseViewHolder
-        mExpenseTouchListener = expenseTouchListener;
+        this.mExpenseTouchListener = expenseTouchListener;
+        itemView.setOnClickListener(this);
     }
 
     public void setCursorData(Cursor cursor){
