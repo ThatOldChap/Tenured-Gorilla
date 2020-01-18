@@ -11,7 +11,8 @@ import com.michaelchaplin.spendometer.data.SpendometerContract;
 public class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
     public TextView mCategory;
-    public TextView mDate;
+    public TextView mDateMonth;
+    public TextView mDateDay;
     public TextView mCost;
     public TextView mNotes;
     public TextView mAccount;
@@ -26,7 +27,8 @@ public class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.O
 
         // Finds the views that will populated with the expense data
         mCategory = itemView.findViewById(R.id.expense_category);
-        mDate = itemView.findViewById(R.id.expense_date);
+        mDateMonth = itemView.findViewById(R.id.expense_date_month);
+        mDateDay = itemView.findViewById(R.id.expense_date_day);
         mCost = itemView.findViewById(R.id.expense_cost);
         mNotes = itemView.findViewById(R.id.expense_notes);
         mAccount = itemView.findViewById(R.id.expense_account);
@@ -50,8 +52,9 @@ public class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.O
         // Binds the data extracted from the cursor at the given position into the views within the ExpenseViewHolder
         mCategory.setText(category);
         mCost.setText("$" + String.valueOf(cost));
-        // mDate.setText(Integer.toString(date));
-        mDate.setText("Jan 12");
+        // mDateMonth.setText(Integer.toString(date));
+        mDateMonth.setText("January");
+        mDateDay.setText("13");
         mNotes.setText(notes);
         mIcon.setImageResource(icon);
         mAccount.setText(account);

@@ -1,86 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="1dp">
+    android:background="@color/colorPrimary"
+    android:layout_marginBottom="1dp" >
+
+    <TextView
+        android:id="@+id/expense_date_day"
+        android:layout_width="64dp"
+        android:layout_height="48dp"
+        android:background="@color/colorAccent"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="DD"
+        android:textColor="@android:color/background_light"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/expense_account"
         android:layout_width="0dp"
-        android:layout_height="28dp"
+        android:layout_height="0dp"
         android:background="@color/colorPrimary"
-        android:gravity="right|center_vertical"
-        android:paddingRight="8dp"
+        android:gravity="center_horizontal|center_vertical"
         android:text="Account"
         android:textColor="@android:color/background_light"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/expense_cost"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/expense_cost"
+        app:layout_constraintTop_toBottomOf="@+id/expense_cost"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/expense_category"
-        android:layout_width="0dp"
-        android:layout_height="28dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:background="@color/colorPrimary"
         android:gravity="left|center_vertical"
-        android:paddingLeft="8dp"
         android:text="@string/category_name"
         android:textColor="@android:color/background_light"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/expense_account"
+        app:layout_constraintBottom_toTopOf="@+id/expense_notes"
         app:layout_constraintStart_toEndOf="@+id/expense_category_icon"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/expense_category_icon"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="0dp"
         android:background="@color/colorAccent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:padding="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/expense_category"
+        app:layout_constraintStart_toEndOf="@+id/expense_date_day"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/round_fiber_new_white_48dp" />
 
     <TextView
         android:id="@+id/expense_cost"
         android:layout_width="96dp"
-        android:layout_height="0dp"
+        android:layout_height="48dp"
         android:background="@color/colorPrimary"
         android:gravity="center_horizontal|center_vertical"
         android:text="Cost"
         android:textColor="@color/colorAccent"
-        android:textSize="18sp"
+        android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/expense_category_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/expense_notes"
         android:layout_width="0dp"
-        android:layout_height="28dp"
+        android:layout_height="24dp"
         android:background="@color/colorPrimary"
-        android:gravity="left|center_vertical"
+        android:gravity="start|center_vertical"
         android:paddingLeft="8dp"
         android:text="Notes"
         android:textColor="@android:color/background_light"
-        app:layout_constraintBottom_toBottomOf="@+id/expense_category_icon"
-        app:layout_constraintEnd_toStartOf="@+id/expense_date"
-        app:layout_constraintStart_toEndOf="@+id/expense_category_icon"
-        app:layout_constraintTop_toBottomOf="@+id/expense_category" />
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toStartOf="@+id/expense_cost"
+        app:layout_constraintStart_toEndOf="@+id/expense_date_day" />
 
     <TextView
-        android:id="@+id/expense_date"
-        android:layout_width="wrap_content"
-        android:layout_height="28dp"
+        android:id="@+id/expense_date_month"
+        android:layout_width="64dp"
+        android:layout_height="16dp"
         android:background="@color/colorPrimary"
-        android:gravity="left|center_vertical"
-        android:paddingRight="8dp"
-        android:text="Date"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="Month"
         android:textColor="@android:color/background_light"
-        app:layout_constraintBottom_toBottomOf="@+id/expense_cost"
-        app:layout_constraintEnd_toStartOf="@+id/expense_cost"
-        app:layout_constraintTop_toBottomOf="@+id/expense_category" />
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/expense_date_day"
+        app:layout_constraintTop_toBottomOf="@+id/expense_date_day" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="64dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="64dp" />
 
 </android.support.constraint.ConstraintLayout>
