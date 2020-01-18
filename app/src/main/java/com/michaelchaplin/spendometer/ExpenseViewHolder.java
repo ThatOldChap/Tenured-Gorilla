@@ -49,7 +49,8 @@ public class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.O
         // Binds the data extracted from the cursor at the given position into the views within the ExpenseViewHolder
         mCategory.setText(category);
         mCost.setText("$" + String.valueOf(cost));
-        mDate.setText(Integer.toString(date));
+        // mDate.setText(Integer.toString(date));
+        mDate.setText("Jan 12");
         mNotes.setText(notes);
         mIcon.setImageResource(icon);
         mAccount.setText(account);

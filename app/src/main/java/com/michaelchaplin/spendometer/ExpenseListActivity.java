@@ -20,8 +20,6 @@ import android.view.MenuItem;
 
 import com.michaelchaplin.spendometer.data.SpendometerContract;
 
-import java.util.ArrayList;
-
 import static com.michaelchaplin.spendometer.data.SpendometerProvider.LOG_TAG;
 
 public class ExpenseListActivity extends AppCompatActivity implements  LoaderManager.LoaderCallbacks<Cursor>, RecyclerViewItemTouchListener {
@@ -68,7 +66,6 @@ public class ExpenseListActivity extends AppCompatActivity implements  LoaderMan
 
         // Prepare the cursor loader by either reconnecting with an existing one or starting a new one
         getSupportLoaderManager().initLoader(EXPENSE_LOADER, null, this);
-
     }
 
     @Override
@@ -77,7 +74,6 @@ public class ExpenseListActivity extends AppCompatActivity implements  LoaderMan
         Log.d(LOG_TAG, "onCreateLoader: mCurrentExpenseUri is = " + mCurrentExpenseUri + " and id = " + id);
 
         if (id == EXPENSE_LOADER) {
-
             // Defines a projection that contains all the columns from the Expenses table
             String[] projection = {
                     SpendometerContract.ExpenseEntry._ID,
