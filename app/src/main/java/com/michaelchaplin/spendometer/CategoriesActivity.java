@@ -157,7 +157,7 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
 
         Log.d(LOG_TAG, "onCreateLoader: mCurrentCategoryUri is = " + mCurrentCategoryUri + " and id = " + id);
         // Returns the CursorLoader that will execute the ContentProvider's query method on a background thread
-        return new CursorLoader(this, SpendometerContract.CategoryEntry.CATEGORY_CONTENT_URI, projection,null,null,"name asc");
+        return new CursorLoader(this, SpendometerContract.CategoryEntry.CATEGORY_CONTENT_URI, projection,null,null,"name COLLATE NOCASE ASC");
     }
 
     @Override

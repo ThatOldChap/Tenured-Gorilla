@@ -40,6 +40,7 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
     ArrayList<CategoryIconDataModel> arrayList = new ArrayList<>();
     private int mIconIDClicked = 0;
     private String mSavedCategoryName;
+    private int mSavedIconID;
 
     // Identifier used to initialize the Loader if the content URI is not null (ie. is a new category)
     public static final int EXISTING_CATEGORY_LOADER = 1;
@@ -130,9 +131,14 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
 
         // If it is an existing category and nothing has changed, return without saving
         Log.d(LOG_TAG, "saveCategory: mIconHasChanged = " + mIconHasChanged + " and mNameHasChanged = " + mNameHasChanged);
-        if(mExistingCategory && !mIconHasChanged && !mNameHasChanged){return;}
+        if(mExistingCategory && !mIconHasChanged && !mNameHasChanged && mSavedCategoryName.equals(nameString)){return;}
 
-        // Creates a new ContentValues object to store the new column name
+        if(!mSavedCategoryName.equals(nameString) && !mIconHasChanged){
+            mNameHasChanged = true;
+            mIconIDClicked = mSavedIconID;
+        }
+
+        // Creates a new ContentValues object to store the new data
         ContentValues values = new ContentValues();
         values.put(SpendometerContract.CategoryEntry.COL_NAME, nameString);
         values.put(SpendometerContract.CategoryEntry.COL_ICON_ID, mIconIDClicked);
@@ -192,21 +198,8 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
 
             case R.id.action_save_category:
 
-                // Cases for new category:
-                // Case 1: If name is empty AND Icons haven't been touched -> Prompt
-                // Case 2: If name has been touched AND Icons haven't been touched -> Prompt
-                // Case 3: If name is empty and Icons have been touched, -> Prompt
-                // Case 4: If name is valid and Icons have been touched -> Save
-
-                // Cases for existing category:
-                // Case 1: If name hasn't been touched AND Icons haven't been touched -> Save
-                // Case 2: If name has been touched AND Icons haven't been touched -> Save
-                // Case 3: If name hasn't been touched and Icons have been touched, -> Save
-                // Case 4: If name and Icons have been touched -> Save
-
-                // if((TextUtils.isEmpty(nameString) && !mNameHasChanged) || (!mIconHasChanged && mCurrentCategoryUri != null)){
                 if(!mExistingCategory && (TextUtils.isEmpty(nameString) || !mIconHasChanged)){
-                    // Add a toast to indicate that remaining fields need to be entered
+
                     Log.d(LOG_TAG, "onOptionsItemSelected: mNameHasChanged = " + mNameHasChanged + " and nameString = " + nameString);
                     Toast.makeText(this, "Please fill out remaining fields", Toast.LENGTH_SHORT).show();
                 } else {
@@ -310,7 +303,8 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
 
             // Setting up a flag to see if text is already in the field for the saveCategory() method
             mSavedCategoryName = categoryName;
-            Log.d(LOG_TAG, "onLoadFinished: categoryName = " + mSavedCategoryName);
+            mSavedIconID = categoryIconID;
+            Log.d(LOG_TAG, "onLoadFinished: categoryName = " + mSavedCategoryName + "iconID = " + mSavedIconID);
         }
 
     }
@@ -396,11 +390,8 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         int id_ = arrayList.get(position).getId();
         mIconIDClicked = arrayList.get(position).getIconDrawable();
 
-
         // Sets the preview image beside the EditText
         mCategoryImageIcon.setImageResource(mIconIDClicked);
-
-        // Activates the onTouchListener that an icon has been clicked
         mIconHasChanged = true;
 
         Log.d(LOG_TAG, "OnIconClick: clicked position " + position + " and mIconHasChanged is: " + mIconHasChanged);
