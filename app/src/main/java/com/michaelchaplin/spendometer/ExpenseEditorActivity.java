@@ -1,13 +1,14 @@
 package com.michaelchaplin.spendometer;
 
 import android.annotation.SuppressLint;
-import android.app.LoaderManager;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -87,13 +88,27 @@ public class ExpenseEditorActivity extends AppCompatActivity implements LoaderMa
         Cursor categoriesCursor = getContentResolver().query(uri, projection, null, null, null);
 
         // Setting up the RecyclerView and its adapter
-        CategoryIconAdapter mAdapter = new CategoryIconAdapter(this, null, this) {};
+        CategoryIconListAdapter mAdapter = new CategoryIconListAdapter(this, categoriesCursor, this);
+        mIconRecyclerView.setAdapter(mAdapter);
+        mIconRecyclerView.setHasFixedSize(true);
+
+        // Specifying a layout manager for the RecyclerView
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
+        mIconRecyclerView.setLayoutManager(layoutManager);
+
+        // Prepare the loader by either reusing an existing loader or creating a new one
+        if(mCurrentExpenseUri != null) {
+            getSupportLoaderManager().initLoader(EXISTING_EXPENSE_LOADER, null, this);
+        }
 
 
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+
+
+
         return null;
     }
 

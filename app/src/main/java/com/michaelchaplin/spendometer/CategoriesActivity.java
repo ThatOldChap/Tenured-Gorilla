@@ -162,16 +162,15 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        // Update the CategoryCursorAdapter with this new cursor containing the updated Category data
-        mAdapter.swapCursor(cursor);
+
         Log.d(LOG_TAG, "onLoadFinished: Preparing to swap cursor");
+        mAdapter.swapCursor(cursor);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
         Log.d(LOG_TAG, "onLoaderReset: Loader is being reset");
-        // Callback called when the data needs to be deleted
         mAdapter.swapCursor(null);
     }
 
