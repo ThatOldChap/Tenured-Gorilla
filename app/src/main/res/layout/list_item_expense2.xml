@@ -6,7 +6,7 @@ android:layout_height="wrap_content"
 android:layout_marginBottom="1dp">
 
 <TextView
-    android:id="@+id/expense_account"
+    android:id="@+id/expense_edit_account"
     android:layout_width="0dp"
     android:layout_height="28dp"
     android:background="@color/colorPrimary"
@@ -28,7 +28,7 @@ android:layout_marginBottom="1dp">
     android:text="@string/category_name"
     android:textColor="@android:color/background_light"
     android:textSize="18sp"
-    app:layout_constraintEnd_toStartOf="@+id/expense_account"
+    app:layout_constraintEnd_toStartOf="@+id/expense_edit_account"
     app:layout_constraintStart_toEndOf="@+id/expense_category_icon"
     app:layout_constraintTop_toTopOf="parent" />
 

@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/expense_account"
+        android:id="@+id/expense_edit_account"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/colorPrimary"
@@ -43,7 +43,7 @@
         android:gravity="left|center_vertical"
         android:text="@string/category_name"
         android:textColor="@android:color/background_light"
-        android:textSize="18sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/expense_notes"
         app:layout_constraintStart_toEndOf="@+id/expense_category_icon"
         app:layout_constraintTop_toTopOf="parent"
@@ -51,13 +51,11 @@
 
     <ImageView
         android:id="@+id/expense_category_icon"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="0dp"
         android:background="@color/colorAccent"
-        android:padding="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/expense_category"
         app:layout_constraintStart_toEndOf="@+id/expense_date_day"
         app:layout_constraintTop_toTopOf="parent"

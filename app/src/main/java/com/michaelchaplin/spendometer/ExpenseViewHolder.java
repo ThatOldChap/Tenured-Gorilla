@@ -10,12 +10,7 @@ import com.michaelchaplin.spendometer.data.SpendometerContract;
 
 public class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-    public TextView mCategory;
-    public TextView mDateMonth;
-    public TextView mDateDay;
-    public TextView mCost;
-    public TextView mNotes;
-    public TextView mAccount;
+    public TextView mCategory, mDateMonth, mDateDay, mCost, mNotes, mAccount;
     public ImageView mIcon;
     private RecyclerViewItemTouchListener mExpenseTouchListener;
 
@@ -31,7 +26,7 @@ public class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.O
         mDateDay = itemView.findViewById(R.id.expense_date_day);
         mCost = itemView.findViewById(R.id.expense_cost);
         mNotes = itemView.findViewById(R.id.expense_notes);
-        mAccount = itemView.findViewById(R.id.expense_account);
+        mAccount = itemView.findViewById(R.id.expense_edit_account);
         mIcon = itemView.findViewById(R.id.expense_category_icon);
 
         // Creates and sets an ExpenseTouchListener on the created ExpenseViewHolder
@@ -41,7 +36,7 @@ public class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.O
 
     public void setCursorData(Cursor cursor){
 
-        // Assigns local variables the values from the cursor at the given position
+        // Extracts the values from the cursor at the given position
         String category = cursor.getString(cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_CATEGORY));
         Double cost = cursor.getDouble(cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_COST));
         int date = cursor.getInt(cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_DATE));

@@ -17,7 +17,7 @@ public class ExpenseListAdapter extends RecyclerViewCursorAdapter<ExpenseViewHol
         // Invokes the superclass methods for ExpenseListAdapter
         super(context, cursor);
 
-        // Passes in any  for the ExpenseTouchListener
+        // Passes an ExpenseTouchListener into the adapter
         this.mExpenseTouchListener = expenseTouchListener;
     }
 
@@ -41,7 +41,6 @@ public class ExpenseListAdapter extends RecyclerViewCursorAdapter<ExpenseViewHol
         viewHolder.setCursorData(cursor);
     }
 
-
     @Override
     public int getItemCount() {
         return super.getItemCount();
@@ -56,7 +55,5 @@ public class ExpenseListAdapter extends RecyclerViewCursorAdapter<ExpenseViewHol
     public int getItemViewType(int position) {
         return super.getItemViewType(position);
     }
-
-
 
 }

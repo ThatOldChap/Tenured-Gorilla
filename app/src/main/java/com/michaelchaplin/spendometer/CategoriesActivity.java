@@ -12,6 +12,8 @@ import android.database.Cursor;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,13 +26,16 @@ import com.michaelchaplin.spendometer.data.SpendometerContract;
 
 import static com.michaelchaplin.spendometer.data.SpendometerProvider.LOG_TAG;
 
-public class CategoriesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CategoriesActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, RecyclerViewItemTouchListener {
 
     // Identifier for the Category data loader
     public static final int CATEGORY_LOADER = 1;
 
-    // Internal cursor adapter to be used with the Cursor Loader
-    CategoryCursorAdapter mCursorAdapter;
+    // Creating variables for all views within the activity
+    public RecyclerView mCategoryRecyclerView;
+
+    public CategoryListAdapter mAdapter;
+    public Uri mCurrentCategoryUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,37 +63,15 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
             }
         });
 
-        // Find the ListView that populates the Category data
-        ListView categoryListView = findViewById(R.id.list_view_categories);
+        // Finding the RecyclerView and assigning its layout manager
+        mCategoryRecyclerView = findViewById(R.id.category_list_recycler);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mCategoryRecyclerView.setLayoutManager(layoutManager);
+        mCategoryRecyclerView.setHasFixedSize(true); // Improves performance
 
-        // Find and set the empty view for the CategoriesActivity
-        View emptyView = findViewById(R.id.empty_view_categories);
-        categoryListView.setEmptyView(emptyView);
-
-        // Setup a CategoryCursorAdapter to create a list item for each category/row in the Cursor
-        // FYI, there is no category data yet (until the load finished) so set the passed in Cursor to null
-        mCursorAdapter = new CategoryCursorAdapter(this, null);
-        categoryListView.setAdapter(mCursorAdapter);
-
-        // Setup an item click listener for each individual category in the ListView
-        categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                // Create a new intent to go the CategoryEditorActivity
-                Intent intent = new Intent(CategoriesActivity.this, CategoryEditorActivity.class);
-
-                // Create a Uri that represents the category that was click on, identified by the "id"
-                Uri currentCategoryUri = ContentUris.withAppendedId(SpendometerContract.CategoryEntry.CATEGORY_CONTENT_URI, id);
-
-                // Pass the Uri to the CategoryEditorActivity as a part of the Intent
-                intent.setData(currentCategoryUri);
-
-                // Launch the CategoryEditorActivity to display the current data for the chosen Category
-                startActivity(intent);
-            }
-        });
+        // Defining the RecyclerView adapter characteristics
+        mAdapter = new CategoryListAdapter(this, null, this);
+        mCategoryRecyclerView.setAdapter(mAdapter);
 
         // Prepare the loader by either reconnecting with an existing one or starting a new one
         getSupportLoaderManager().initLoader(CATEGORY_LOADER, null, this);
@@ -163,7 +146,7 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
 
     // Creates and returns a CursorLoader that will take care of creating a Cursor for the data being displayed
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         // Defines a projection that specifies the columns from the table that should be loaded
         String[] projection = {
@@ -172,23 +155,16 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
                 SpendometerContract.CategoryEntry.COL_ICON_ID
         };
 
-        Log.d(LOG_TAG, "onCreateLoader: Finished creating the loader");
+        Log.d(LOG_TAG, "onCreateLoader: mCurrentCategoryUri is = " + mCurrentCategoryUri + " and id = " + id);
         // Returns the CursorLoader that will execute the ContentProvider's query method on a background thread
-        return new CursorLoader(
-                this,
-                SpendometerContract.CategoryEntry.CATEGORY_CONTENT_URI,
-                projection,
-                null,
-                null,
-                "name asc"
-        );
+        return new CursorLoader(this, SpendometerContract.CategoryEntry.CATEGORY_CONTENT_URI, projection,null,null,"name asc");
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         // Update the CategoryCursorAdapter with this new cursor containing the updated Category data
-        mCursorAdapter.swapCursor(cursor);
-        Log.d(LOG_TAG, "Finished swapping cursor in onLoadFinished");
+        mAdapter.swapCursor(cursor);
+        Log.d(LOG_TAG, "onLoadFinished: Preparing to swap cursor");
     }
 
     @Override
@@ -196,6 +172,19 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
 
         Log.d(LOG_TAG, "onLoaderReset: Loader is being reset");
         // Callback called when the data needs to be deleted
-        mCursorAdapter.swapCursor(null);
+        mAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+
+        long id = mAdapter.getItemId(position);
+        Log.d(LOG_TAG, "onItemClick: adapter position is " + position);
+        Log.d(LOG_TAG, "onItemClick: item id (ie. Uri /# number) is = " + id);
+        // Navigates to the CategoryEditorActivity to edit the Category at the position selected
+        Intent intent = new Intent(CategoriesActivity.this, CategoryEditorActivity.class);
+        Uri currentCategoryUri = ContentUris.withAppendedId(SpendometerContract.CategoryEntry.CATEGORY_CONTENT_URI, id);
+        intent.setData(currentCategoryUri);
+        startActivity(intent);
     }
 }

@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 import static com.michaelchaplin.spendometer.data.SpendometerProvider.LOG_TAG;
 
-public class CategoryEditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, CategoryIconAdapter.OnIconListener {
+public class CategoryEditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, RecyclerViewItemTouchListener {
 
     // Global variables to store the data for a new Category
     private EditText mCategoryNameEditText;
@@ -48,7 +48,9 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
     private Uri mCurrentCategoryUri;
 
     // Boolean flags to keep track of if fields were already edited/touched
-    public boolean mCategoryHasChanged = false;
+    public boolean mNameHasChanged = false;
+    public boolean mIconHasChanged = false;
+    public boolean mExistingCategory = false;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -59,16 +61,18 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         // Examine the intent that was used to launch this activity
         Intent intent = getIntent();
         mCurrentCategoryUri = intent.getData();
-        Log.d(LOG_TAG, "onCreate: mCurrentCategoryUri = " +mCurrentCategoryUri);
+        Log.d(LOG_TAG, "onCreate: mCurrentCategoryUri = " + mCurrentCategoryUri);
 
         // Set the relevant title of the app bar based on a new or existing category
         if (mCurrentCategoryUri == null) {
             setTitle("New Category");
+            mExistingCategory = false;
 
             // Gets rid of the options menu so the "Delete" option can't be seen if there aren't any categories
             invalidateOptionsMenu();
         } else {
             setTitle("Edit Category");
+            mExistingCategory = true;
         }
 
         // Find all relevant views for input fields to see if they have been modified
@@ -90,7 +94,8 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
 
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                mCategoryHasChanged = true;
+                Log.d(LOG_TAG, "onTouch: Category name EditText was touched and mCategoryHasChanged is " + mNameHasChanged);
+                mNameHasChanged = true;
                 return false;
             }
         };
@@ -101,8 +106,6 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         // Defining the adapter for the RecyclerView
         CategoryIconAdapter mAdapter = new CategoryIconAdapter(this, arrayList, this);
         mCategoryIconRecyclerView.setAdapter(mAdapter);
-
-        // Fixes the size of the RecyclerView to improve performance
         mCategoryIconRecyclerView.setHasFixedSize(true);
 
         // Specify a Grid Layout Manager for the RecyclerView
@@ -121,10 +124,13 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         // Read from the user edit field and trim the whitespace on the end
         String nameString = mCategoryNameEditText.getText().toString().trim();
 
+        // If it is a new category with no name or icon chosen yet, return without saving
         Log.d(LOG_TAG, "saveCategory: nameString = " + nameString + " and mSavedCategoryName = " + mSavedCategoryName + " and mIconClicked = " + mIconIDClicked);
-        // Check if the mCategoryNameEditText field is blank and return to the CategoryActivity with no changes
-        if(mCurrentCategoryUri == null && TextUtils.isEmpty(nameString) && mIconIDClicked == 0){return;}
-        if(mCurrentCategoryUri != null && mSavedCategoryName.equals(nameString)){return;}
+        if(!mExistingCategory && TextUtils.isEmpty(nameString) && mIconIDClicked == 0){return;}
+
+        // If it is an existing category and nothing has changed, return without saving
+        Log.d(LOG_TAG, "saveCategory: mIconHasChanged = " + mIconHasChanged + " and mNameHasChanged = " + mNameHasChanged);
+        if(mExistingCategory && !mIconHasChanged && !mNameHasChanged){return;}
 
         // Creates a new ContentValues object to store the new column name
         ContentValues values = new ContentValues();
@@ -179,16 +185,29 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        String nameString = mCategoryNameEditText.getText().toString().trim();
+
         // User has clicked on a menu option
         switch (item.getItemId()) {
 
             case R.id.action_save_category:
 
-                String nameString = mCategoryNameEditText.getText().toString().trim();
+                // Cases for new category:
+                // Case 1: If name is empty AND Icons haven't been touched -> Prompt
+                // Case 2: If name has been touched AND Icons haven't been touched -> Prompt
+                // Case 3: If name is empty and Icons have been touched, -> Prompt
+                // Case 4: If name is valid and Icons have been touched -> Save
 
-                if(TextUtils.isEmpty(nameString) || (!mCategoryHasChanged && !nameString.equals(mSavedCategoryName))){
+                // Cases for existing category:
+                // Case 1: If name hasn't been touched AND Icons haven't been touched -> Save
+                // Case 2: If name has been touched AND Icons haven't been touched -> Save
+                // Case 3: If name hasn't been touched and Icons have been touched, -> Save
+                // Case 4: If name and Icons have been touched -> Save
+
+                // if((TextUtils.isEmpty(nameString) && !mNameHasChanged) || (!mIconHasChanged && mCurrentCategoryUri != null)){
+                if(!mExistingCategory && (TextUtils.isEmpty(nameString) || !mIconHasChanged)){
                     // Add a toast to indicate that remaining fields need to be entered
-                    Log.d(LOG_TAG, "onOptionsItemSelected: mCategoryHasChanged = " + mCategoryHasChanged + " and nameString = " + nameString);
+                    Log.d(LOG_TAG, "onOptionsItemSelected: mNameHasChanged = " + mNameHasChanged + " and nameString = " + nameString);
                     Toast.makeText(this, "Please fill out remaining fields", Toast.LENGTH_SHORT).show();
                 } else {
                     saveCategory();
@@ -202,10 +221,10 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
                 return true;
 
             case android.R.id.home:
-                // If the category hasn't changed, continue with navigating up to the CategoriesActivity
-                Log.d(LOG_TAG, "Home Button Pressed and change flag is: " + mCategoryHasChanged);
 
-                if(!mCategoryHasChanged) {
+                // If the category hasn't changed, continue with navigating up to the CategoriesActivity
+                Log.d(LOG_TAG, "onOptionsItemSelected: mNameHasChanged = " + mNameHasChanged + " and mIconHasChanged = " + mIconHasChanged + " and nameString = " + nameString);
+                if(mExistingCategory || (TextUtils.isEmpty(nameString) && !mIconHasChanged)) {
                     NavUtils.navigateUpFromSameTask(CategoryEditorActivity.this);
                     return true;
                 }
@@ -229,9 +248,11 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
     @Override
     public void onBackPressed() {
 
-        Log.d(LOG_TAG, "Back Button Pressed and change flag is: " + mCategoryHasChanged);
-        // If the category hasn't changed, continue with handling back button press
-        if (!mCategoryHasChanged) {
+        String nameString = mCategoryNameEditText.getText().toString().trim();
+
+        Log.d(LOG_TAG, "Back Button Pressed and mNameHasChanged is: " + mNameHasChanged + " and mIconHasChanged is: " + mIconHasChanged + " and nameString = " + nameString);
+        // If it is an existing category or the Category name is blank and no icon has been selected, proceed
+        if (mExistingCategory || (TextUtils.isEmpty(nameString) && !mIconHasChanged)) {
             super.onBackPressed();
             return;
         }
@@ -368,7 +389,7 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
     }
 
     @Override
-    public void onIconClick(int position) {
+    public void onItemClick(int position) {
 
         // Finds the values of the CategoryIconData item at the position of the clicked item
         String name = arrayList.get(position).getIconName();
@@ -380,12 +401,9 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         mCategoryImageIcon.setImageResource(mIconIDClicked);
 
         // Activates the onTouchListener that an icon has been clicked
-        mCategoryHasChanged = true;
+        mIconHasChanged = true;
 
-        Log.d(LOG_TAG, "OnIconClick: clicked position " + position + " and change flag is: " + mCategoryHasChanged);
+        Log.d(LOG_TAG, "OnIconClick: clicked position " + position + " and mIconHasChanged is: " + mIconHasChanged);
         Log.d(LOG_TAG, "OnIconClick: Name: " + name + ", Icon ID: " + mIconIDClicked + ", id_: " + id_);
     }
-
-
-
 }
