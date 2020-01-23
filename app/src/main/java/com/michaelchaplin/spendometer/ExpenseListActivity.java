@@ -173,10 +173,13 @@ public class ExpenseListActivity extends AppCompatActivity implements  LoaderMan
     @Override
     public void onItemClick(int position) {
 
-        Log.d(LOG_TAG, "onItemClick: adapter position is: " + position);
+        // Obtains the row ID of of the item chosen in the cursor
+        long id = mAdapter.getItemId(position);
+        Log.d(LOG_TAG, "onItemClick: adapter position is " + position + " and item id (ie. Uri /# number) is " + id);
+
         // Navigates to the ExpenseEditorActivity to edit the Expense at the position selected
         Intent intent = new Intent(ExpenseListActivity.this, ExpenseEditorActivity.class);
-        Uri currentExpenseUri = ContentUris.withAppendedId(SpendometerContract.ExpenseEntry.EXPENSE_CONTENT_URI, position);
+        Uri currentExpenseUri = ContentUris.withAppendedId(SpendometerContract.ExpenseEntry.EXPENSE_CONTENT_URI, id);
         intent.setData(currentExpenseUri);
         startActivity(intent);
     }

@@ -124,6 +124,10 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
 
         // Read from the user edit field and trim the whitespace on the end
         String nameString = mCategoryNameEditText.getText().toString().trim();
+        // If a new category is being saved, save the category name to nameString to avoid saving a null value
+        if(!mExistingCategory){
+            mSavedCategoryName = nameString;
+        }
 
         // If it is a new category with no name or icon chosen yet, return without saving
         Log.d(LOG_TAG, "saveCategory: nameString = " + nameString + " and mSavedCategoryName = " + mSavedCategoryName + " and mIconClicked = " + mIconIDClicked);
@@ -173,7 +177,7 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu options
-        getMenuInflater().inflate(R.menu.menu_category_editor, menu);
+        getMenuInflater().inflate(R.menu.menu_editor_page, menu);
         return true;
     }
 
@@ -182,7 +186,7 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         super.onPrepareOptionsMenu(menu);
         // Hides the delete menu option if this is a new category
         if (mCurrentCategoryUri == null){
-            MenuItem menuItem = menu.findItem(R.id.action_delete_category);
+            MenuItem menuItem = menu.findItem(R.id.action_delete_item);
             menuItem.setVisible(false);
         }
         return true;
@@ -196,7 +200,7 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         // User has clicked on a menu option
         switch (item.getItemId()) {
 
-            case R.id.action_save_category:
+            case R.id.action_save_item:
 
                 if(!mExistingCategory && (TextUtils.isEmpty(nameString) || !mIconHasChanged)){
 
@@ -208,7 +212,7 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
                 }
                 return true;
 
-            case R.id.action_delete_category:
+            case R.id.action_delete_item:
                 // Pop up a confirmation dialog for the deletion
                 showDeletionConfirmationDialog();
                 return true;
@@ -304,7 +308,7 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
             // Setting up a flag to see if text is already in the field for the saveCategory() method
             mSavedCategoryName = categoryName;
             mSavedIconID = categoryIconID;
-            Log.d(LOG_TAG, "onLoadFinished: categoryName = " + mSavedCategoryName + "iconID = " + mSavedIconID);
+            Log.d(LOG_TAG, "onLoadFinished: categoryName = " + mSavedCategoryName + " and iconID = " + mSavedIconID);
         }
 
     }
@@ -362,7 +366,6 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         // Creates and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-
     }
 
     // Performs the deletion of a category in the database

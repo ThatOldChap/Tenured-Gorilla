@@ -27,7 +27,7 @@ public class CategoryIconAdapter extends RecyclerView.Adapter<CategoryIconViewHo
     public CategoryIconViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         // Inflate the category icon layout items
-        View view = LayoutInflater.from(mContext).inflate(R.layout.recycler_view_item_category_icons, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.recycler_category_icons, parent, false);
 
         // Returns a new CategoryIconViewHolder with a TouchListener attached
         return new CategoryIconViewHolder(view, mIconTouchListener);

@@ -180,6 +180,7 @@ public class CategoriesActivity extends AppCompatActivity implements LoaderManag
         long id = mAdapter.getItemId(position);
         Log.d(LOG_TAG, "onItemClick: adapter position is " + position);
         Log.d(LOG_TAG, "onItemClick: item id (ie. Uri /# number) is = " + id);
+
         // Navigates to the CategoryEditorActivity to edit the Category at the position selected
         Intent intent = new Intent(CategoriesActivity.this, CategoryEditorActivity.class);
         Uri currentCategoryUri = ContentUris.withAppendedId(SpendometerContract.CategoryEntry.CATEGORY_CONTENT_URI, id);

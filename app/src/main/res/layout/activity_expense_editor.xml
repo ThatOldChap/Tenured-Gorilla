@@ -1,9 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:paddingLeft="24dp"
+            android:text="$"
+            android:textColor="@color/colorAccent"
+            android:textSize="64sp" />
+
+        <EditText
+            android:id="@+id/expense_edit_cost"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            android:gravity="center_vertical"
+            android:inputType="numberDecimal"
+            android:paddingLeft="8dp"
+            android:paddingRight="48dp"
+            android:text="29.35"
+            android:textColor="@color/colorAccent"
+            android:textSize="48sp" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView4"
@@ -11,7 +47,6 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="192dp"
         android:background="@color/colorPrimary"
         android:gravity="center|center_horizontal|end"
         android:paddingRight="8dp"
@@ -20,7 +55,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/expense_edit_account" />
 
     <TextView
         android:id="@+id/textView9"
@@ -62,7 +97,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
-        android:layout_marginTop="192dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:background="@color/colorPrimary"
@@ -70,10 +105,10 @@
         android:paddingLeft="16dp"
         android:textColor="@android:color/background_light"
         android:textColorHint="@android:color/darker_gray"
-        android:textSize="14sp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <TextView
         android:id="@+id/expense_edit_date"
@@ -87,8 +122,9 @@
         android:background="@color/colorPrimary"
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
-        android:text="Jan 22, 2020"
+        android:text="Apr 1, 2020"
         android:textColor="@android:color/background_light"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/expense_edit_account" />
@@ -108,31 +144,10 @@
         android:paddingLeft="16dp"
         android:textColor="@android:color/background_light"
         android:textColorHint="@android:color/darker_gray"
-        android:textSize="14sp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/expense_edit_date" />
-
-    <EditText
-        android:id="@+id/expense_edit_cost"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@color/colorPrimary"
-        android:gravity="center_horizontal|center_vertical"
-        android:padding="48dp"
-        android:paddingTop="48dp"
-        android:paddingBottom="48dp"
-        android:text="$ 29.35"
-        android:textColor="@color/colorAccent"
-        android:textSize="48sp"
-        app:layout_constraintBottom_toTopOf="@+id/expense_edit_account"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/expense_edit_category_recycler"
@@ -144,7 +159,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class CategoryIconListAdapter extends RecyclerViewCursorAdapter<CategoryViewHolder> {
+public class CategoryIconListAdapter extends RecyclerViewCursorAdapter<CategoryIconViewHolder> {
 
     private RecyclerViewItemTouchListener mCategoryTouchListener;
 
@@ -20,22 +20,22 @@ public class CategoryIconListAdapter extends RecyclerViewCursorAdapter<CategoryV
     }
 
     @Override
-    public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CategoryIconViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         // Inflate the category icon layout items
-        View view = LayoutInflater.from(mContext).inflate(R.layout.recycler_view_item_category_icons, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.recycler_category_icons, parent, false);
 
         // Return a new CategoryViewHolder with a TouchListener attached
-        return new CategoryViewHolder(view, mCategoryTouchListener);
+        return new CategoryIconViewHolder(view, mCategoryTouchListener);
     }
 
     @Override
-    public void onBindViewHolder(CategoryViewHolder viewHolder, Cursor cursor) {
+    public void onBindViewHolder(CategoryIconViewHolder viewHolder, Cursor cursor) {
 
         // Verifies whether the cursor was moved to the requested position of ViewHolder being bound
         cursor.moveToPosition(cursor.getPosition());
 
-        // Sets the cursor data into the CategoryViewHolder
+        // Sets the cursor data into the CategoryIconViewHolder
         viewHolder.setCursorData(cursor);
     }
 
