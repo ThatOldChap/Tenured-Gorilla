@@ -1,25 +1,22 @@
 package com.michaelchaplin.spendometer;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.CursorLoader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.os.Bundle;
 
-import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -36,7 +33,9 @@ import android.widget.Toast;
 import com.michaelchaplin.spendometer.data.SpendometerContract;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -52,11 +51,11 @@ public class ExpenseEditorActivity extends AppCompatActivity implements LoaderMa
     private TextView mDateTextView;
     private RecyclerView mIconRecyclerView;
     CategoryIconListAdapter mAdapter;
+    Calendar mCalendar = Calendar.getInstance(TimeZone.getDefault());
 
     // Selected category and icon data for the new expense
     int selectedIcon;
     String selectedCategory;
-    final Calendar mCalendar = Calendar.getInstance(TimeZone.getDefault()); // Retrieves the current date
 
     // Boolean flag to check if any input fields have been modified
     public boolean mExpenseHasChanged = false;
@@ -77,12 +76,26 @@ public class ExpenseEditorActivity extends AppCompatActivity implements LoaderMa
         mCurrentExpenseUri = intent.getData();
         Log.d(LOG_TAG, "onCreate: mCurrentCategoryUri = " + mCurrentExpenseUri);
 
+        // Get a support ActionBar corresponding to this toolbar
+        ActionBar ab = getSupportActionBar();
+        // Enable the Up button
+        if(ab != null){
+            ab.setDisplayHomeAsUpEnabled(true);
+            ab.setHomeButtonEnabled(true);
+        }
+
         // Set the relevant title of the app bar based on a new or existing expense
         if (mCurrentExpenseUri == null) {
             setTitle("New Expense");
             mExistingExpense = false;
+
             // Gets rid of the options menu so the "Delete" option can't be seen if there aren't any categories
             invalidateOptionsMenu();
+
+            // Sets the current date
+            String simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(mCalendar.getTime());
+            mDateTextView.setText(simpleDateFormat);
+
         } else {
             setTitle("Edit Expense");
             mExistingExpense = true;
@@ -107,15 +120,14 @@ public class ExpenseEditorActivity extends AppCompatActivity implements LoaderMa
         mAccountEditText.setOnTouchListener(mTouchListener);
         mNotesEditText.setOnTouchListener(mTouchListener);
         mCostEditText.setOnTouchListener(mTouchListener);
+        mDateTextView.setOnTouchListener(mTouchListener);
 
-        // Setting up the DatePickerDialog
-        mDateTextView.setOnClickListener(new View.OnClickListener(){
-
+        // Sets up the DatePickerDialog for choosing the date
+        mDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Creates and shows the datePickerFragment
-                DialogFragment datePicker = new DatePickerFragment();
-                datePicker.show(getSupportFragmentManager(), "date picker");
+                // Calls the method to open the DatePickerDialog
+                pickDate();
             }
         });
 
@@ -190,7 +202,9 @@ public class ExpenseEditorActivity extends AppCompatActivity implements LoaderMa
             mCostEditText.setText(String.valueOf(cost));
             mAccountEditText.setText(account);
             mNotesEditText.setText(notes);
-            mDateTextView.setText(String.valueOf(date));
+
+            mCalendar.setTimeInMillis((long) date);
+            mDateTextView.setText(new SimpleDateFormat("MM/dd/yyyy",Locale.getDefault()).format(mCalendar.getTime()));
         }
     }
 
@@ -294,42 +308,30 @@ public class ExpenseEditorActivity extends AppCompatActivity implements LoaderMa
         showUnsavedChangesDialog(discardButtonClickListener);
     }
 
-    public class DatePickerFragment extends AppCompatDialogFragment implements DatePickerDialog.OnDateSetListener {
+    private void pickDate() {
 
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // Gets the current date
+        final Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        int mYear = calendar.get(Calendar.YEAR);
+        int mMonth = calendar.get(Calendar.MONTH);
+        int mDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-            // Set the current date to be the default date
-            final Calendar calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
+        // Setup the datePickerDialog
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
 
-            // Return a new instance of a DatePickerDialog
-            return new DatePickerDialog(getActivity(), DatePickerFragment.this, year, month, day);
-        }
+                    // Creates a format for the date that is being displayed
+                    String selectedDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(calendar.getTime());
+                    mDateTextView.setText(selectedDate);
+                }
+            },mYear, mMonth + 1, mDayOfMonth);
 
-        @Override
-        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-
-            mCalendar.set(Calendar.YEAR, year);
-            mCalendar.set(Calendar.MONTH, month);
-            mCalendar.set(Calendar.DAY_OF_MONTH, day);
-
-            // Convert the selectedDate into the date format we want to display
-            String selectedDate = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA).format(mCalendar.getTime());
-
-            Log.d(LOG_TAG, "onDateSet: " + selectedDate);
-            // Send the date back to the DatePicker fragment
-            getTargetFragment().onActivityResult(
-                    getTargetRequestCode(),
-                    Activity.RESULT_OK,
-                    new Intent().putExtra("selectedDate", selectedDate)
-            );
-
-        }
+        // Show the datePickerDialog
+        datePickerDialog.show();
     }
+
+
 
     private void showDeletionConfirmationDialog() {
 
@@ -355,7 +357,6 @@ public class ExpenseEditorActivity extends AppCompatActivity implements LoaderMa
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
 
     private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
 
@@ -385,7 +386,7 @@ public class ExpenseEditorActivity extends AppCompatActivity implements LoaderMa
         String notes = mNotesEditText.getText().toString().trim();
         int iconID = selectedIcon;
         String category = selectedCategory;
-        // int date = Integer.valueOf(mDateTextView.getText().toString());
+        int date = Integer.valueOf(mDateTextView.getText().toString());
 
         // If it is an expense with no info entered yet, return without saving
         if(!mExpenseHasChanged && TextUtils.isEmpty(account) && TextUtils.isEmpty(notes)) {
@@ -399,7 +400,7 @@ public class ExpenseEditorActivity extends AppCompatActivity implements LoaderMa
         values.put(SpendometerContract.ExpenseEntry.COL_ACCOUNT, account);
         values.put(SpendometerContract.ExpenseEntry.COL_ICON_ID, iconID);
         values.put(SpendometerContract.ExpenseEntry.COL_CATEGORY, category);
-        // values.put(SpendometerContract.ExpenseEntry.COL_DATE, date);
+        values.put(SpendometerContract.ExpenseEntry.COL_DATE, date);
 
         // Determine if this is a new or existing expense
         if (!mExistingExpense) {
