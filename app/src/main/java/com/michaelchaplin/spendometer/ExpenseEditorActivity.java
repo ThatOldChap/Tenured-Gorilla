@@ -3,7 +3,6 @@ package com.michaelchaplin.spendometer;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -33,9 +32,7 @@ import android.widget.Toast;
 import com.michaelchaplin.spendometer.data.SpendometerContract;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -51,7 +48,7 @@ public class ExpenseEditorActivity extends AppCompatActivity implements LoaderMa
     private TextView mDateTextView;
     private RecyclerView mIconRecyclerView;
     CategoryIconListAdapter mAdapter;
-    Calendar mCalendar = Calendar.getInstance(TimeZone.getDefault());
+    Calendar mCalendar;
 
     // Selected category and icon data for the new expense
     int selectedIcon;
@@ -84,6 +81,13 @@ public class ExpenseEditorActivity extends AppCompatActivity implements LoaderMa
             ab.setHomeButtonEnabled(true);
         }
 
+        // Find all relevant views for input fields to see if they have been modified
+        mAccountEditText = findViewById(R.id.expense_edit_account);
+        mNotesEditText = findViewById(R.id.expense_edit_notes);
+        mCostEditText = findViewById(R.id.expense_edit_cost);
+        mDateTextView = findViewById(R.id.expense_edit_date);
+        mIconRecyclerView = findViewById(R.id.expense_edit_category_recycler);
+
         // Set the relevant title of the app bar based on a new or existing expense
         if (mCurrentExpenseUri == null) {
             setTitle("New Expense");
@@ -93,20 +97,15 @@ public class ExpenseEditorActivity extends AppCompatActivity implements LoaderMa
             invalidateOptionsMenu();
 
             // Sets the current date
-            String simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(mCalendar.getTime());
+            mCalendar = Calendar.getInstance(TimeZone.getDefault());
+            String simpleDateFormat = new SimpleDateFormat("EEE MMM dd, yyyy", Locale.getDefault()).format(mCalendar.getTime());
             mDateTextView.setText(simpleDateFormat);
+            Log.d(LOG_TAG, "onCreate: Date = " + simpleDateFormat);
 
         } else {
             setTitle("Edit Expense");
             mExistingExpense = true;
         }
-
-        // Find all relevant views for input fields to see if they have been modified
-        mAccountEditText = findViewById(R.id.expense_edit_account);
-        mNotesEditText = findViewById(R.id.expense_edit_notes);
-        mCostEditText = findViewById(R.id.expense_edit_cost);
-        mDateTextView = findViewById(R.id.expense_edit_date);
-        mIconRecyclerView = findViewById(R.id.expense_edit_category_recycler);
 
         // Setup an onTouchListener for the input fields to see if they have been modified
         View.OnTouchListener mTouchListener = new View.OnTouchListener(){
@@ -196,15 +195,16 @@ public class ExpenseEditorActivity extends AppCompatActivity implements LoaderMa
             double cost = cursor.getDouble(costColumnIndex);
             String account = cursor.getString(accountColumnIndex);
             String notes = cursor.getString(notesColumnIndex);
-            int date = cursor.getInt(dateColumnIndex);
+            long date = cursor.getLong(dateColumnIndex);
 
             // Update the views on screen with the new data from the database
             mCostEditText.setText(String.valueOf(cost));
             mAccountEditText.setText(account);
             mNotesEditText.setText(notes);
 
-            mCalendar.setTimeInMillis((long) date);
-            mDateTextView.setText(new SimpleDateFormat("MM/dd/yyyy",Locale.getDefault()).format(mCalendar.getTime()));
+            mCalendar = Calendar.getInstance(TimeZone.getDefault());
+            mCalendar.setTimeInMillis(date);
+            mDateTextView.setText(new SimpleDateFormat("EEE MMM dd, yyyy",Locale.getDefault()).format(mCalendar.getTime()));
         }
     }
 
@@ -315,6 +315,7 @@ public class ExpenseEditorActivity extends AppCompatActivity implements LoaderMa
         int mYear = calendar.get(Calendar.YEAR);
         int mMonth = calendar.get(Calendar.MONTH);
         int mDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        Log.d(LOG_TAG, "pickDate: current date is year: " + mYear + ", month: " + mMonth + ", day: " + mDayOfMonth);
 
         // Setup the datePickerDialog
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
@@ -322,16 +323,16 @@ public class ExpenseEditorActivity extends AppCompatActivity implements LoaderMa
                 public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
 
                     // Creates a format for the date that is being displayed
-                    String selectedDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(calendar.getTime());
+                    mCalendar.set(year, month, dayOfMonth);
+                    String selectedDate = new SimpleDateFormat("EEE MMM dd, yyyy", Locale.getDefault()).format(mCalendar.getTime());
                     mDateTextView.setText(selectedDate);
+                    Log.d(LOG_TAG, "onDateSet: Date is " + selectedDate);
                 }
-            },mYear, mMonth + 1, mDayOfMonth);
+            },mYear, mMonth, mDayOfMonth);
 
         // Show the datePickerDialog
         datePickerDialog.show();
     }
-
-
 
     private void showDeletionConfirmationDialog() {
 
@@ -386,7 +387,7 @@ public class ExpenseEditorActivity extends AppCompatActivity implements LoaderMa
         String notes = mNotesEditText.getText().toString().trim();
         int iconID = selectedIcon;
         String category = selectedCategory;
-        int date = Integer.valueOf(mDateTextView.getText().toString());
+        long date = mCalendar.getTimeInMillis();
 
         // If it is an expense with no info entered yet, return without saving
         if(!mExpenseHasChanged && TextUtils.isEmpty(account) && TextUtils.isEmpty(notes)) {

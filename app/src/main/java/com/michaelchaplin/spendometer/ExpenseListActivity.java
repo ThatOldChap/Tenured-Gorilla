@@ -2,6 +2,7 @@ package com.michaelchaplin.spendometer;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.content.Intent;
 import android.support.v4.app.NavUtils;
@@ -17,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.michaelchaplin.spendometer.data.SpendometerContract;
 
@@ -29,6 +31,7 @@ public class ExpenseListActivity extends AppCompatActivity implements  LoaderMan
 
     // Creating variables for all views within the activity
     public RecyclerView mExpenseListRecyclerView;
+    public FloatingActionButton mFAB;
 
     // Creating variables for the RecyclerView adapter
     public ExpenseListAdapter mAdapter;
@@ -53,6 +56,17 @@ public class ExpenseListActivity extends AppCompatActivity implements  LoaderMan
             ab.setDisplayHomeAsUpEnabled(true);
             ab.setHomeButtonEnabled(true);
         }
+
+        mFAB = findViewById(R.id.fab_add_expense);
+        mFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Navigates to the ExpenseEditorActivity to create a new Expense
+                Intent newExpenseIntent = new Intent(ExpenseListActivity.this, ExpenseEditorActivity.class);
+                startActivity(newExpenseIntent);
+            }
+        });
 
         // Finding the RecyclerView and assigning its layout manager
         mExpenseListRecyclerView = findViewById(R.id.expense_list_recycler);
@@ -149,7 +163,7 @@ public class ExpenseListActivity extends AppCompatActivity implements  LoaderMan
         values.put(SpendometerContract.ExpenseEntry.COL_ICON_ID, R.drawable.round_fiber_new_white_48dp);
         values.put(SpendometerContract.ExpenseEntry.COL_ACCOUNT, "AMEX");
         values.put(SpendometerContract.ExpenseEntry.COL_NOTES, "Stan's Diner");
-        values.put(SpendometerContract.ExpenseEntry.COL_DATE, 9870055);
+        values.put(SpendometerContract.ExpenseEntry.COL_DATE, 1580360400000L);
         values.put(SpendometerContract.ExpenseEntry.COL_COST, 15.47);
 
         // Inserts a new row into the provider via the ContentResolver and returns the Uri of the Expenses table row

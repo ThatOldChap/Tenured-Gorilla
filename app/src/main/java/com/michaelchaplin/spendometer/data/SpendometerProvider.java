@@ -199,7 +199,7 @@ public class SpendometerProvider extends ContentProvider {
         }
 
         if(values.containsKey(SpendometerContract.ExpenseEntry.COL_DATE)){
-            int date = values.getAsInteger(SpendometerContract.ExpenseEntry.COL_DATE);
+            long date = values.getAsLong(SpendometerContract.ExpenseEntry.COL_DATE);
              if (date <= 0) {
                  throw new IllegalArgumentException("Please enter a date");
              }
@@ -342,7 +342,7 @@ public class SpendometerProvider extends ContentProvider {
         }
 
         if(values.containsKey(SpendometerContract.ExpenseEntry.COL_DATE)){
-            int date = values.getAsInteger(SpendometerContract.ExpenseEntry.COL_DATE);
+            long date = values.getAsLong(SpendometerContract.ExpenseEntry.COL_DATE);
             if (date <= 0) {
                 throw new IllegalArgumentException("Please enter a date");
             }

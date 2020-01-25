@@ -33,11 +33,12 @@
             android:layout_height="match_parent"
             android:background="@color/colorPrimary"
             android:gravity="center_vertical"
+            android:hint="0.00"
             android:inputType="numberDecimal"
             android:paddingLeft="8dp"
             android:paddingRight="48dp"
-            android:text="29.35"
             android:textColor="@color/colorAccent"
+            android:textColorHint="@android:color/darker_gray"
             android:textSize="48sp" />
     </LinearLayout>
 

@@ -8,10 +8,15 @@ import android.widget.TextView;
 
 import com.michaelchaplin.spendometer.data.SpendometerContract;
 
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
+
 public class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
     public TextView mCategory, mDateMonth, mDateDay, mCost, mNotes, mAccount;
     public ImageView mIcon;
+    Calendar mCalendar;
     private RecyclerViewItemTouchListener mExpenseTouchListener;
 
     // Constructor to add all the views into the ViewHolder for an expense
@@ -39,20 +44,23 @@ public class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.O
         // Extracts the values from the cursor at the given position
         String category = cursor.getString(cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_CATEGORY));
         Double cost = cursor.getDouble(cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_COST));
-        int date = cursor.getInt(cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_DATE));
+        long date = cursor.getLong(cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_DATE));
         String notes = cursor.getString(cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_NOTES));
         int icon = cursor.getInt(cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_ICON_ID));
         String account = cursor.getString(cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_ACCOUNT));
 
         // Binds the data extracted from the cursor at the given position into the views within the ExpenseViewHolder
         mCategory.setText(category);
-        mCost.setText("$" + String.valueOf(cost));
-        // mDateMonth.setText(Integer.toString(date));
-        mDateMonth.setText("January");
-        mDateDay.setText("13");
+        mCost.setText(String.valueOf(cost));
         mNotes.setText(notes);
         mIcon.setImageResource(icon);
         mAccount.setText(account);
+
+        mCalendar = Calendar.getInstance(TimeZone.getDefault());
+        mCalendar.setTimeInMillis(date);
+
+        mDateMonth.setText(mCalendar.getDisplayName(mCalendar.get(Calendar.MONTH),Calendar.LONG, Locale.getDefault()));
+        mDateDay.setText(String.valueOf(mCalendar.get(Calendar.DAY_OF_MONTH)));
     }
 
     @Override
