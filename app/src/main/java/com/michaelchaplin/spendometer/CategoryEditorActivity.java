@@ -124,35 +124,28 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
 
         // Read from the user edit field and trim the whitespace on the end
         String nameString = mCategoryNameEditText.getText().toString().trim();
-        // If a new category is being saved, save the category name to nameString to avoid saving a null value
-        if(!mExistingCategory){
-            mSavedCategoryName = nameString;
+
+        // If an existing Category is not modified at all, bypass saving the same data
+        if (mExistingCategory && !mIconHasChanged && !mNameHasChanged && mSavedCategoryName.equals(nameString)) {
+            Log.d(LOG_TAG, "saveCategory: No changes made, bypassing save");
+            return;
         }
 
-        // If it is a new category with no name or icon chosen yet, return without saving
-        Log.d(LOG_TAG, "saveCategory: nameString = " + nameString + " and mSavedCategoryName = " + mSavedCategoryName + " and mIconClicked = " + mIconIDClicked);
-        if(!mExistingCategory && TextUtils.isEmpty(nameString) && mIconIDClicked == 0){return;}
-
-        // If it is an existing category and nothing has changed, return without saving
-        Log.d(LOG_TAG, "saveCategory: mIconHasChanged = " + mIconHasChanged + " and mNameHasChanged = " + mNameHasChanged);
-        if(mExistingCategory && !mIconHasChanged && !mNameHasChanged && mSavedCategoryName.equals(nameString)){return;}
-
-        if(!mSavedCategoryName.equals(nameString) && !mIconHasChanged){
-            mNameHasChanged = true;
-            mIconIDClicked = mSavedIconID;
+        // Prepares the category name to be correct before it is passed into a ContentValues
+        if(!mExistingCategory || !mSavedCategoryName.equals(nameString)){
+            mSavedCategoryName = nameString;
         }
 
         // Creates a new ContentValues object to store the new data
         ContentValues values = new ContentValues();
-        values.put(SpendometerContract.CategoryEntry.COL_NAME, nameString);
-        values.put(SpendometerContract.CategoryEntry.COL_ICON_ID, mIconIDClicked);
+        values.put(SpendometerContract.CategoryEntry.COL_NAME, mSavedCategoryName);
+        values.put(SpendometerContract.CategoryEntry.COL_ICON_ID, mSavedIconID);
 
         // Determine if this is a new or existing category
-        if (mCurrentCategoryUri == null) {
+        if (!mExistingCategory) {
 
-            // Insert a new category into the Provider and return the URI for the Category table
+            // Insert a new category into the Provider and return the Uri for the Category table
             Uri newUri = getContentResolver().insert(SpendometerContract.CategoryEntry.CATEGORY_CONTENT_URI, values);
-
             Log.d(LOG_TAG, "Uri for new category is: " + newUri);
 
             if(newUri == null) {
@@ -162,14 +155,13 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
             }
         } else {
 
-            // This case means there is an existing category, so update the category with the content Uri mCurrentCategoryUri
-            // and pass into the new ContentValues
+            // Update the category with the content Uri mCurrentCategoryUri and pass into the Provider
             int rowsAffected = getContentResolver().update(mCurrentCategoryUri, values, null, null);
 
             if(rowsAffected == 0) {
-                Toast.makeText(this, "Insertion failed",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Update failed",Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Insertion successful",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Update successful",Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -202,14 +194,18 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
 
             case R.id.action_save_item:
 
-                if(!mExistingCategory && (TextUtils.isEmpty(nameString) || !mIconHasChanged)){
-
-                    Log.d(LOG_TAG, "onOptionsItemSelected: mNameHasChanged = " + mNameHasChanged + " and nameString = " + nameString);
-                    Toast.makeText(this, "Please fill out remaining fields", Toast.LENGTH_SHORT).show();
-                } else {
+                // Checks if all necessary fields are filled in before saving the category
+                if(!mExistingCategory && mIconHasChanged && !TextUtils.isEmpty(nameString)){
                     saveCategory();
-                    finish(); // Exits the activity to return to CategoryActivity
+                    finish(); // Exits the activity to return to the CategoriesActivity
+                } else if (mExistingCategory && !TextUtils.isEmpty(nameString)) {
+                    saveCategory();
+                    finish(); // Exits the activity to return to the CategoriesActivity
+                } else {
+                    Toast.makeText(this, "Please fill out remaining fields", Toast.LENGTH_SHORT).show();
+                    Log.d(LOG_TAG, "onOptionsItemSelected: mNameHasChanged = " + mNameHasChanged + " and nameString = " + nameString);
                 }
+
                 return true;
 
             case R.id.action_delete_item:
@@ -219,12 +215,15 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
 
             case android.R.id.home:
 
-                // If the category hasn't changed, continue with navigating up to the CategoriesActivity
-                Log.d(LOG_TAG, "onOptionsItemSelected: mNameHasChanged = " + mNameHasChanged + " and mIconHasChanged = " + mIconHasChanged + " and nameString = " + nameString);
-                if(mExistingCategory || (TextUtils.isEmpty(nameString) && !mIconHasChanged)) {
+                // Checks if no changes were made and allows the user to use the home button
+                if(!mExistingCategory && !mIconHasChanged && TextUtils.isEmpty(nameString)){
+                    NavUtils.navigateUpFromSameTask(CategoryEditorActivity.this);
+                    return true;
+                } else if (mExistingCategory && !mIconHasChanged && mSavedCategoryName.equals(nameString)) {
                     NavUtils.navigateUpFromSameTask(CategoryEditorActivity.this);
                     return true;
                 }
+
                 // If there are unsaved changes, setup a dialog to warn the user
                 DialogInterface.OnClickListener discardButtonClickListener = new DialogInterface.OnClickListener() {
                     @Override
@@ -246,12 +245,13 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
     public void onBackPressed() {
 
         String nameString = mCategoryNameEditText.getText().toString().trim();
-
         Log.d(LOG_TAG, "Back Button Pressed and mNameHasChanged is: " + mNameHasChanged + " and mIconHasChanged is: " + mIconHasChanged + " and nameString = " + nameString);
-        // If it is an existing category or the Category name is blank and no icon has been selected, proceed
-        if (mExistingCategory || (TextUtils.isEmpty(nameString) && !mIconHasChanged)) {
+
+        // Checks if no changes were made and allows the user to navigate back
+        if(!mExistingCategory && !mIconHasChanged && !mNameHasChanged && TextUtils.isEmpty(nameString)){
             super.onBackPressed();
-            return;
+        } else if (mExistingCategory) {
+            super.onBackPressed();
         }
 
         // Setup a dialog to warn the user if there are unsaved changes
@@ -392,12 +392,13 @@ public class CategoryEditorActivity extends AppCompatActivity implements LoaderM
         String name = arrayList.get(position).getIconName();
         int id_ = arrayList.get(position).getId();
         mIconIDClicked = arrayList.get(position).getIconDrawable();
+        mSavedIconID = mIconIDClicked;
 
         // Sets the preview image beside the EditText
         mCategoryImageIcon.setImageResource(mIconIDClicked);
         mIconHasChanged = true;
 
-        Log.d(LOG_TAG, "OnIconClick: clicked position " + position + " and mIconHasChanged is: " + mIconHasChanged);
+        Log.d(LOG_TAG, "OnIconClick: clicked position " + position);
         Log.d(LOG_TAG, "OnIconClick: Name: " + name + ", Icon ID: " + mIconIDClicked + ", id_: " + id_);
     }
 }
