@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/darker_gray">
+
+    <TextView
+        android:id="@+id/expense_group_day_of_month"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="12"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/expense_group_name_of_day"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="start|left|center_vertical"
+        android:text="WEDNESDAY"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/expense_group_month_and_year"
+        app:layout_constraintEnd_toStartOf="@+id/expense_group_currency_type"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@+id/expense_group_day_of_month"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/expense_group_month_and_year"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="start|left|center_vertical"
+        android:text="JANUARY 2020"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/expense_group_currency_type"
+        app:layout_constraintStart_toEndOf="@+id/expense_group_day_of_month"
+        app:layout_constraintTop_toBottomOf="@+id/expense_group_name_of_day"
+        app:layout_constraintVertical_chainStyle="spread" />
+
+    <TextView
+        android:id="@+id/expense_group_total_cost"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="right|center_vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="86.26"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/expense_group_currency_type"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:text="$"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/expense_group_total_cost"
+        app:layout_constraintTop_toTopOf="parent" />
+</android.support.constraint.ConstraintLayout>

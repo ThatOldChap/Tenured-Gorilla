@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="1dp">
+
+    <TextView
+        android:id="@+id/expense_child_notes"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:gravity="start|center_vertical"
+        android:text="Stan's Diner"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/expense_child_account"
+        app:layout_constraintStart_toEndOf="@+id/expense_child_category_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread_inside" />
+
+    <TextView
+        android:id="@+id/expense_child_cost"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="start|center_vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="23.90"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/expense_child_category_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/expense_child_currency_type"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="start|center_vertical"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:text="$"
+        app:layout_constraintBottom_toBottomOf="@+id/expense_child_category_icon"
+        app:layout_constraintEnd_toStartOf="@+id/expense_child_cost"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/expense_child_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="start|center_vertical"
+        android:text="PCMC"
+        app:layout_constraintBottom_toBottomOf="@+id/expense_child_category_icon"
+        app:layout_constraintStart_toEndOf="@+id/expense_child_category_icon"
+        app:layout_constraintTop_toBottomOf="@+id/expense_child_notes"
+        app:layout_constraintVertical_chainStyle="spread_inside" />
+
+    <ImageView
+        android:id="@+id/expense_child_category_icon"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:padding="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/round_add_circle_24" />
+
+</android.support.constraint.ConstraintLayout>
