@@ -4,6 +4,8 @@ package com.michaelchaplin.spendometer.ExpandableRecyclerView;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.michaelchaplin.spendometer.ExpandableRecyclerView.ParentViewHolder.ParentViewHolderExpandableListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -225,14 +227,35 @@ public abstract class ExpandableRecyclerAdapter<P extends Parent<C>, C, PVH exte
     // Method to expand a parent and adds its children to the flatList of items
     private void updateExpandedParent(ExpandableWrapper<P, C> parentWrapper, int flatParentPosition, boolean expansionTriggeredByListItemClick) {
 
-        // Bypasses the method if the
+        // Bypasses the method if the Wrapper is already expanded
         if(parentWrapper.isExpanded()) {
             return;
         }
 
+        parentWrapper.setExpandedState(true);
+        int adjFlatParentPosition = flatParentPosition + 1; // Adjusted to account for the position starting at 0 instead of 1
 
+        // Gets the wrapped Child list from the passed in parentWrapper
+        List<ExpandableWrapper<P, C>> wrappedChildList = parentWrapper.getWrappedChildList();
+
+        if(wrappedChildList != null) {
+            int childCount = wrappedChildList.size();
+
+            // Inserts the wrapped Child list into new positions in the parentWrapper
+            // ie. if childCount = 4, it  will cycle through mFlatItemList[0] to [3]
+            for (int i = 0; i < childCount; i++) {
+                mFlatItemList.add(adjFlatParentPosition + i, wrappedChildList.get(i));
+            }
+
+            // Notifies any observers that qty: childCount Child items have been inserted
+            notifyItemRangeInserted(adjFlatParentPosition, childCount);
+        }
+
+        // When the parent is expanded, get the nearest parent item position
+        if(expansionTriggeredByListItemClick && mExpandCollapseListener != null) {
+            mExpandCollapseListener.onParentExpanded(getNearestParentPosition(flatParentPosition));
+        }
     }
-
 
     // Method called when the ParentViewHolder has triggered a collapse for its parent
     protected void parentCollapsedFromViewHolder(int flatParentPosition) {
@@ -244,9 +267,200 @@ public abstract class ExpandableRecyclerAdapter<P extends Parent<C>, C, PVH exte
         updateCollapsedParent(parentWrapper, flatParentPosition, true);
     }
 
+    // Method to collapse a parent and removes its children from the flatList of items
+    public void updateCollapsedParent(ExpandableWrapper<P, C> parentWrapper, int flatParentPosition, boolean collapseTriggeredByListItemClick) {
+
+        // Bypasses the method if the Wrapper is already collapsed
+        if(!parentWrapper.isExpanded()) {
+            return;
+        }
+
+        parentWrapper.setExpandedState(false);
+        int adjFlatParentPosition = flatParentPosition + 1; // Adjusted to account for the childList starting at 0 instead of 1
+
+        // Gets the wrapped Child list from the passed in parentWrapper
+        List<ExpandableWrapper<P, C>> wrappedChildList = parentWrapper.getWrappedChildList();
+
+        if(wrappedChildList != null) {
+            int childCount = wrappedChildList.size();
+
+            // Removes the wrapped Child list from the positions in the parentWrapper
+            // ie. if childCount = 4, it  will cycle from mFlatItemList[3] to [0]
+            for (int i = childCount - 1; i >= 0; i--){
+                mFlatItemList.remove(adjFlatParentPosition + i);
+            }
+
+            // Notifies any observers that qty: childCount Child items have been removed
+            notifyItemRangeRemoved(adjFlatParentPosition, childCount);
+        }
+
+        // When the parent is collapsed, get the nearest parent item position
+        if(collapseTriggeredByListItemClick && mExpandCollapseListener != null) {
+            mExpandCollapseListener.onParentCollapsed(getNearestParentPosition(flatParentPosition));
+        }
+    }
+
+    // Implementation of the ParentViewHolderExpandableListener from the ParentViewHolder class
+    private ParentViewHolderExpandableListener mParentViewHolderExpandableListener = new ParentViewHolderExpandableListener() {
+
+        @Override
+        public void onParentExpanded(int flatParentPosition) {
+            parentExpandedFromViewHolder(flatParentPosition);
+        }
+
+        @Override
+        public void onParentCollapsed(int flatParentPosition) {
+            parentCollapsedFromViewHolder(flatParentPosition);
+        }
+    };
+
+    // Expands a specific Parent in a list of Parents
+    public void expandParent(P parent) {
+
+        ExpandableWrapper<P, C> parentWrapper = new ExpandableWrapper<>(parent);
+
+        // Gets the flatPosition of the parent in the mFlatItemsList
+        int flatParentPosition = mFlatItemList.indexOf(parentWrapper);
+        if(flatParentPosition == INVALID_FLAT_POSITION) {
+            return;
+        }
+
+        // Expands the views in each RecyclerView at the ViewHolder level
+        expandViews(mFlatItemList.get(flatParentPosition), flatParentPosition);
+    }
+
+    // Calls through to the ParentViewHolder to expand views for each RecyclerView a specified parent is a child of
+    private void expandViews(ExpandableWrapper<P, C> parentWrapper, int flatParentPosition) {
+        PVH viewHolder;
+
+        for(RecyclerView recyclerView : mAttachedRecyclerViewPool) {
+            viewHolder = (PVH) recyclerView.findViewHolderForAdapterPosition(flatParentPosition);
+
+            if(viewHolder != null && !viewHolder.isExpanded()) {
+                viewHolder.setExpandedState(true);
+                viewHolder.onExpansionToggled(false);
+            }
+        }
+        updateCollapsedParent(parentWrapper, flatParentPosition, false);
+    }
+
+    // Expands a parent at the specified index in a list of parents
+    public void expandParent(int parentPosition) {
+        expandParent(mParentList.get(parentPosition));
+    }
+
+    // Expands all parents in a range of indices in a list of parents
+    public void expandParentRange(int startParentPosition, int parentCount) {
+        int endParentPosition = startParentPosition + parentCount;
+
+        for(int i = startParentPosition; i < endParentPosition; i++) {
+            expandParent(i);
+        }
+    }
+
+    // Expands all parents in a list of parents
+    public void expandAllParents() {
+
+        for (P parent : mParentList) {
+            expandParent(parent);
+        }
+    }
+
+    // Collapses a specific Parent in a list of Parents
+    public void collapseParent(P parent) {
+
+        ExpandableWrapper<P, C> parentWrapper = new ExpandableWrapper<>(parent);
+
+        // Gets the flatPosition of the parent in the mFlatItemsList
+        int flatParentPosition = mFlatItemList.indexOf(parentWrapper);
+        if(flatParentPosition == INVALID_FLAT_POSITION) {
+            return;
+        }
+
+        // Collapses the views in each RecyclerView at the ViewHolder level
+        collapseViews(mFlatItemList.get(flatParentPosition), flatParentPosition);
+    }
+
+    // Calls through to the ParentViewHolder to collapse views for each RecyclerView a specified parent is a child of
+    private void collapseViews(ExpandableWrapper<P, C> parentWrapper, int flatParentPosition) {
+        PVH viewHolder;
+
+        for (RecyclerView recyclerView : mAttachedRecyclerViewPool) {
+
+            viewHolder = (PVH) recyclerView.findViewHolderForAdapterPosition(flatParentPosition);
+            if(viewHolder != null && !viewHolder.isExpanded()) {
+                viewHolder.setExpandedState(false);
+                viewHolder.onExpansionToggled(true);
+            }
+        }
+        updateCollapsedParent(parentWrapper, flatParentPosition, false);
+    }
 
 
+    // Collapses a parent at the specified index in a list of parents
+    public void collapseParent(int parentPosition) {
+        collapseParent(mParentList.get(parentPosition));
+    }
 
+    // Collapses all parents in a range of indices in a list of parents
+    public void collapseParentRange(int startParentPosition, int parentCount) {
+        int endParentPosition = startParentPosition + parentCount;
+
+        for(int i = startParentPosition; i < endParentPosition; i++) {
+            collapseParent(i);
+        }
+    }
+
+    // Collapses all parents in a list of parents
+    public void collapseAllParents() {
+
+        for (P parent : mParentList) {
+            collapseParent(parent);
+        }
+    }
+
+    // Returns the nearest Parent position given a relative index in an entire RecyclerView
+    // If it is the index of a parent, it will return the corresponding parent position
+    // If it is the index of a child within the RecyclerView, it will return the position of that child's parent
+    int getNearestParentPosition(int flatPosition) {
+
+        if(flatPosition == 0) {
+            return 0;
+        }
+
+        // Sets the parentCount at -1 to account for the position starting at [0]
+        int parentCount = -1;
+
+        // Increment through the flatPosition indexes until a Parent is found
+        for(int i = 0; i <= flatPosition; i++) {
+
+            ExpandableWrapper<P, C> listItem = mFlatItemList.get(i);
+            if(listItem.isParent()) {
+                parentCount++;
+            }
+        }
+        return parentCount;
+    }
+
+    // Given an index relative to the entire RecyclerView for a child item, returns the child position within the child list of a parent
+    int getChildPosition(int flatPosition) {
+
+        if(flatPosition == 0) {
+            return 0;
+        }
+
+        int childCount = 0;
+        for(int i = 0; i < flatPosition; i++) {
+
+            ExpandableWrapper<P, C> listItem = mFlatItemList.get(i);
+            if(listItem.isParent()) {
+                childCount = 0;
+            } else {
+                childCount++;
+            }
+        }
+        return childCount;
+    }
 
 
 
