@@ -4,6 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 // A wrapper that is used to link metadata with a list item
+
+/**
+ * A wrapper that is used to create a 2-column by X-row matrix
+ * Ex. <Parent 1, Child 1>
+ *     <Parent 1, Child 2>
+ *     <Parent 1, Child 3>
+ *     <Parent 2, Child 1>
+ *     <Parent 2, Child 2>
+ * @param <P> Parent List item
+ * @param <C> Child List item
+ */
 public class ExpandableWrapper<P extends Parent<C>, C> {
 
     private P mParent;
@@ -84,15 +95,46 @@ public class ExpandableWrapper<P extends Parent<C>, C> {
         return childItemList;
     }
 
-    // TODO: Implement in the future for the savedState
     @Override
-    public int hashCode() {
-        return super.hashCode();
+    public boolean equals(Object object) {
+
+        // If the an object being compared is an ExpandableWrapper<P, C>, return true
+        if(this == object) {return true;}
+
+        // If the object isn't an ExpandableWrapper<P, C>, return false
+        if(object == null || getClass() != object.getClass()) { return false;}
+
+        // Sets up an item named "that" which has unknown Parent and Child items
+        final ExpandableWrapper<?, ?> that = (ExpandableWrapper<?, ?>) object;
+
+        boolean parentNonNullChecker = mParent != null;
+        boolean thatParentNonNullChecker = that.mParent != null;
+        boolean childNonNullChecker = mChild != null;
+        boolean thatChildNonNullChecker = that.mChild != null;
+
+        // If mParent isn't null and mParent doesn't equal the mParent of "that", return false
+        // If mParent isn't null and mParent equals the mParent of "that", then return false if "that" has a non-null mParent
+        if (parentNonNullChecker ? !mParent.equals(that.mParent) : thatParentNonNullChecker) {
+            return false;
+        }
+
+        // If mChild isn't null and mChild equals the mChild of "that", return true
+        // If mChild isn't null and mChild doesn't equal the mChild of "that", return true if the mChild of "that" is non-Null
+        return childNonNullChecker ? mChild.equals(that.mChild) : thatChildNonNullChecker;
     }
 
     // TODO: Implement in the future for the savedState
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public int hashCode() {
+
+        boolean parentNonNullChecker = mParent != null;
+        boolean childNonNullChecker = mChild != null;
+
+        // Sets the hashcode if mParent/mChild is non-Null
+        int result = parentNonNullChecker ? mParent.hashCode() : 0;
+
+        // Uses 31 as a prime number to multiply hashcode by
+        result = 31 * result + (childNonNullChecker ? mChild.hashCode() : 0);
+        return result;
     }
 }
