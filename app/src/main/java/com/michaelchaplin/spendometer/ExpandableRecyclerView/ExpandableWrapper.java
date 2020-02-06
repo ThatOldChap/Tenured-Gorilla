@@ -6,12 +6,10 @@ import java.util.List;
 // A wrapper that is used to link metadata with a list item
 
 /**
- * A wrapper that is used to create a 2-column by X-row matrix
- * Ex. <Parent 1, Child 1>
- *     <Parent 1, Child 2>
- *     <Parent 1, Child 3>
- *     <Parent 2, Child 1>
- *     <Parent 2, Child 2>
+ * A wrapper that is used as a container for a Parent object with children. Wraps the Parent and
+ * Child together into the same object so they both can be accessed at once
+ * Ex. ExpandableWrapper<Recipe<Ingredients>, Ingredients>
+ *
  * @param <P> Parent List item
  * @param <C> Child List item
  */

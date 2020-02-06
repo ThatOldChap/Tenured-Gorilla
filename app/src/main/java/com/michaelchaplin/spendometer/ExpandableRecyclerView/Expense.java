@@ -1,11 +1,15 @@
 package com.michaelchaplin.spendometer.ExpandableRecyclerView;
 
+import java.util.Calendar;
+import java.util.Locale;
+
 public class Expense {
 
     private String mCategory, mNotes, mAccount;
     private int mIconID;
     private long mDate;
     private double mCost;
+    private Calendar mCalendar = Calendar.getInstance();
 
     // Standard Constructor to create an Expense
     public Expense(String category, String notes, String account, int iconID, long date, double cost) {
@@ -16,6 +20,8 @@ public class Expense {
         mIconID = iconID;
         mDate = date;
         mCost = cost;
+
+        mCalendar.setTimeInMillis(mDate);
     }
 
     // Getter methods for an expense
@@ -36,6 +42,18 @@ public class Expense {
     }
     public double getCost() {
         return mCost;
+    }
+    public String getDayOfMonth() {
+        return mCalendar.getDisplayName(Calendar.DAY_OF_MONTH, Calendar.LONG, Locale.getDefault());
+    }
+    public String getDayOfWeek() {
+        return mCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+    }
+    public String getMonth() {
+        return mCalendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+    }
+    public String getYear() {
+        return mCalendar.getDisplayName(Calendar.YEAR, Calendar.LONG, Locale.getDefault());
     }
 
     // Setter methods for an expense

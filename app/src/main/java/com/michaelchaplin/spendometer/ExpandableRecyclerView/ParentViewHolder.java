@@ -3,7 +3,7 @@ package com.michaelchaplin.spendometer.ExpandableRecyclerView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-// Custom viewholder class for a Parent that keeps track of the exapanded states and allows for
+// Custom ViewHolder class for a Parent that keeps track of the expanded states and allows for
 // triggering on expansion-based events
 public class ParentViewHolder<P extends Parent<C>, C> extends RecyclerView.ViewHolder implements View.OnClickListener {
 

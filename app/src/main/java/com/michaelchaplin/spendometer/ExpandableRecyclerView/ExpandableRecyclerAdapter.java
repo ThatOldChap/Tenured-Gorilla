@@ -1,7 +1,6 @@
 package com.michaelchaplin.spendometer.ExpandableRecyclerView;
 
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -38,18 +37,8 @@ public abstract class ExpandableRecyclerAdapter<P extends Parent<C>, C, PVH exte
     public static final int TYPE_FIRST_USER = 2;
     public static final int INVALID_FLAT_POSITION = -1;
 
-    /**
-     * OMG I think this is the following:
-     * <p>
-     * Parent 1, Child 1
-     * Parent 1, Child 2
-     * Parent 1, Child 3
-     * Parent 2, Child 1
-     * Parent 2, Child 2
-     */
     // A list of all currently expanded parents and their children, in order
     private List<ExpandableWrapper<P, C>> mFlatItemList;
-
     private List<P> mParentList;
 
     // Interface that allows objects to register themselves as expand/collapse listeners to be notified of change events
@@ -278,7 +267,7 @@ public abstract class ExpandableRecyclerAdapter<P extends Parent<C>, C, PVH exte
     }
 
     // Method to collapse a parent and removes its children from the flatList of items
-    public void updateCollapsedParent(ExpandableWrapper<P, C> parentWrapper, int flatParentPosition, boolean collapseTriggeredByListItemClick) {
+    private void updateCollapsedParent(ExpandableWrapper<P, C> parentWrapper, int flatParentPosition, boolean collapseTriggeredByListItemClick) {
 
         // Bypasses the method if the Wrapper is already collapsed
         if (!parentWrapper.isExpanded()) {
@@ -524,7 +513,7 @@ public abstract class ExpandableRecyclerAdapter<P extends Parent<C>, C, PVH exte
     // General notification to DataObservers that the dataset has changed
     public void notifyParentDataSetChanged(boolean preserveExpansionState) {
 
-        if(preserveExpansionState) {
+        if (preserveExpansionState) {
             mFlatItemList = generateFlattenedParentChildList(mParentList, mExpansionStateMap);
         } else {
             mFlatItemList = generateFlattenedParentChildList(mParentList);
@@ -652,7 +641,7 @@ public abstract class ExpandableRecyclerAdapter<P extends Parent<C>, C, PVH exte
     }
 
     // Notify any registered Observers that a parent has changed
-    public void notifyParentchanged(int parentPosition) {
+    public void notifyParentChanged(int parentPosition) {
 
         P parent = mParentList.get(parentPosition);
         int flatParentPositionStart = getFlatParentPosition(parentPosition);
