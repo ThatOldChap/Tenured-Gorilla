@@ -145,7 +145,7 @@ public abstract class ExpandableRecyclerAdapter<P extends Parent<C>, C, PVH exte
     public abstract void onBindChildViewHolder(CVH childViewHolder, int parentPosition, int childPosition, C child);
 
     // Getter method that returns the number of parents and children currently expanded (ie. flatItemList size)
-    public int getFlatItemCount() {
+    public int getItemCount() {
         return mFlatItemList.size();
     }
 

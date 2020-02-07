@@ -38,7 +38,6 @@ public class ExpenseDay implements Parent<Expense>{
         } else {
             throw new IllegalStateException("Child List cannot be null");
         }
-
         return mExpenseList;
     }
 
