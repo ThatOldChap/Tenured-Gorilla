@@ -1,11 +1,12 @@
 package com.michaelchaplin.spendometer.ExpandableRecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.michaelchaplin.spendometer.R;
 
-public class ExpenseDayViewHolder extends ParentViewHolder {
+public class ExpenseDayViewHolder extends ParentViewHolder{
 
     private TextView mTotalCost, mYear, mMonth, mDayOfWeek, mDayOfMonth;
 
@@ -25,7 +26,7 @@ public class ExpenseDayViewHolder extends ParentViewHolder {
         mYear.setText(expenseDay.getYear());
         mMonth.setText(expenseDay.getMonth());
         mDayOfWeek.setText(expenseDay.getDayOfWeek());
-        mDayOfMonth.setText(expenseDay.getDayOfMonth());
+        mDayOfMonth.setText(String.valueOf(expenseDay.getDayOfMonth()));
     }
 
 }

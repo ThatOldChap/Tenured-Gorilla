@@ -74,7 +74,7 @@ public class ExpandableWrapper<P extends Parent<C>, C> {
 
     // Returns a wrapped list of children from a wrapped parent
     public List<ExpandableWrapper<P, C>> getWrappedChildList() {
-        if (mWrappedParent) {
+        if (!mWrappedParent) {
             throw new IllegalStateException("Parent not wrapped");
         }
         return mWrappedChildList;

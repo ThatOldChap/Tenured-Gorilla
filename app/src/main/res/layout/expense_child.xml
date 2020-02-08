@@ -2,14 +2,18 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/expense_child_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="1dp">
+    android:layout_marginBottom="1dp"
+    android:background="@android:color/white">
 
     <TextView
         android:id="@+id/expense_child_notes"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:gravity="start|center_vertical"
         android:text="Stan's Diner"
@@ -52,6 +56,8 @@
         android:id="@+id/expense_child_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginBottom="8dp"
         android:gravity="start|center_vertical"
         android:text="PCMC"
@@ -64,9 +70,9 @@
         android:id="@+id/expense_child_category_icon"
         android:layout_width="64dp"
         android:layout_height="64dp"
+        android:background="@color/colorPrimary"
         android:padding="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/round_add_circle_24" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

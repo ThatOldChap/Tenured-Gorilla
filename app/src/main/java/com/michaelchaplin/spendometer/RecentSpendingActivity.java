@@ -1,10 +1,14 @@
 package com.michaelchaplin.spendometer;
-package com.michaelchaplin.spendometer.ExpandableRecyclerView;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ReyclerView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
+
+import com.michaelchaplin.spendometer.ExpandableRecyclerView.Expense;
+import com.michaelchaplin.spendometer.ExpandableRecyclerView.ExpenseDay;
+import com.michaelchaplin.spendometer.ExpandableRecyclerView.ExpenseDayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +20,7 @@ public class RecentSpendingActivity extends AppCompatActivity {
     List<Expense> expenseData1 = new ArrayList<>();
     List<Expense> expenseData2 = new ArrayList<>();
     List<Expense> expenseData3 = new ArrayList<>();
+    ExpenseDay expenseDay1, expenseDay2, expenseDay3;
     List<ExpenseDay> mExpenseDayData = new ArrayList<>();
     
     @Override
@@ -41,11 +46,16 @@ public class RecentSpendingActivity extends AppCompatActivity {
                        
         expenseData3.add(new Expense("Movies", "Harley Quinn", "AMEX", R.drawable.round_local_movies_white_48, 1581483605000L, 26.87));
         expenseData3.add(new Expense("Work Dues", "PEO Renewal", "AMEX", R.drawable.round_work_white_48, 1581483600050L, 156.65));
-        expenseData3.add(new Expense("Sports", "Hockey Intramural", "CASH", R.drawable.round_sports_tennis_white_48, 1581483650000L, 20));                 
+        expenseData3.add(new Expense("Sports", "Hockey Intramural", "Cash", R.drawable.round_sports_tennis_white_48, 1581483650000L, 20));
                          
-        mExpenseDayData.add(expenseData1);
-        mExpenseDayData.add(expenseData2);
-        mExpenseDayData.add(expenseData3);
+        expenseDay1 = new ExpenseDay(expenseData1);
+        expenseDay2 = new ExpenseDay(expenseData2);
+        expenseDay3 = new ExpenseDay(expenseData3);
+
+        mExpenseDayData.add(expenseDay1);
+        mExpenseDayData.add(expenseDay2);
+        mExpenseDayData.add(expenseDay3);
+
         // 1581310800000L is 2020/02/10, 1581397200000L is 2020/02/11 and 1581483600000 is 2020/02/12
         
         // Find the RecyclerView and assign its layout manager

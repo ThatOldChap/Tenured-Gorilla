@@ -9,7 +9,7 @@ public class Expense {
     private int mIconID;
     private long mDate;
     private double mCost;
-    private Calendar mCalendar = Calendar.getInstance();
+    private Calendar mCalendar;
 
     // Standard Constructor to create an Expense
     public Expense(String category, String notes, String account, int iconID, long date, double cost) {
@@ -21,6 +21,7 @@ public class Expense {
         mDate = date;
         mCost = cost;
 
+        mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(mDate);
     }
 
@@ -43,8 +44,8 @@ public class Expense {
     public double getCost() {
         return mCost;
     }
-    public String getDayOfMonth() {
-        return mCalendar.getDisplayName(Calendar.DAY_OF_MONTH, Calendar.LONG, Locale.getDefault());
+    public int getDayOfMonth() {
+        return (mCalendar.get(Calendar.DAY_OF_MONTH));
     }
     public String getDayOfWeek() {
         return mCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
@@ -53,7 +54,7 @@ public class Expense {
         return mCalendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
     }
     public String getYear() {
-        return mCalendar.getDisplayName(Calendar.YEAR, Calendar.LONG, Locale.getDefault());
+        return String.valueOf(mCalendar.get(Calendar.YEAR));
     }
 
     // Setter methods for an expense

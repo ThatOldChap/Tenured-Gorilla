@@ -1,10 +1,13 @@
 package com.michaelchaplin.spendometer.ExpandableRecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.michaelchaplin.spendometer.R;
+
+import static com.michaelchaplin.spendometer.data.SpendometerProvider.LOG_TAG;
 
 public class ExpenseChildViewHolder extends ChildViewHolder{
 

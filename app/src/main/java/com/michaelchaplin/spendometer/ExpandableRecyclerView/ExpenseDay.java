@@ -14,7 +14,7 @@ public class ExpenseDay implements Parent<Expense>{
     public double getTotalCost() {
         return totalCost;
     }
-    public String getDayOfMonth() {
+    public int getDayOfMonth() {
         return mExpenseList.get(0).getDayOfMonth();
     }
     public String getDayOfWeek() {

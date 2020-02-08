@@ -1,6 +1,7 @@
 package com.michaelchaplin.spendometer.ExpandableRecyclerView;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 // Custom ViewHolder class for a Parent that keeps track of the expanded states and allows for
@@ -11,6 +12,7 @@ public class ParentViewHolder<P extends Parent<C>, C> extends RecyclerView.ViewH
     private boolean mIsExpanded;
     P mParent;
     ExpandableRecyclerAdapter mExpandableRecyclerAdapter;
+    public static final String TAG = ParentViewHolder.class.getSimpleName();
 
     // Default constructor for the class
     public ParentViewHolder(View itemView) {
@@ -67,8 +69,10 @@ public class ParentViewHolder<P extends Parent<C>, C> extends RecyclerView.ViewH
         // Sets the onClick method to be controlled by a setter method
         if(mIsExpanded) {
             collapseView();
+            Log.d(TAG, "onClick: Parent collapsed");
         } else {
             expandView();
+            Log.d(TAG, "onClick: Parent expanded");
         }
     }
 
