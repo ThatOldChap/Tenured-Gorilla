@@ -7,8 +7,6 @@ import android.widget.TextView;
 
 import com.michaelchaplin.spendometer.R;
 
-import static com.michaelchaplin.spendometer.data.SpendometerProvider.LOG_TAG;
-
 public class ExpenseChildViewHolder extends ChildViewHolder{
 
     private TextView mCost, mNotes, mAccount;
