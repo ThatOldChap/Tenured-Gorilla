@@ -6,11 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.michaelchaplin.spendometer.ExpandableRecyclerView.Expense;
 import com.michaelchaplin.spendometer.ExpandableRecyclerView.ExpenseDay;
 import com.michaelchaplin.spendometer.ExpandableRecyclerView.ExpenseDayAdapter;
-import com.michaelchaplin.spendometer.ExpandableRecyclerView.Parent;
+import com.michaelchaplin.spendometer.data.SpendometerContract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,9 @@ public class RecentSpendingActivity extends AppCompatActivity {
     List<Expense> expenseData3 = new ArrayList<>();
     ExpenseDay expenseDay1, expenseDay2, expenseDay3;
     List<ExpenseDay> mExpenseDayData = new ArrayList<>();
-    
+    private String TAG = RecentSpendingActivity.class.getSimpleName();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,5 +75,50 @@ public class RecentSpendingActivity extends AppCompatActivity {
         
     }
 
+
+    public List<ExpenseDay> CursorToExpenseConverter(Cursor cursor) {
+
+        List<Expense> expenseList = new ArrayList<>();
+        List<ExpenseDay> parentList = new ArrayList<>();
+        boolean mDataValid;
+        int COL_CATEGORY, COL_ACCOUNT, COL_COST, COL_NOTES, COL_ICON_ID, COL_DATE;
+        int prevDayOfMonth = 1;
+
+        // Determines whether the cursor is null or has data in it
+        mDataValid = cursor != null && cursor.moveToFirst();
+
+        if(mDataValid) {
+
+            COL_CATEGORY = cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_CATEGORY);
+            COL_ACCOUNT = cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_ACCOUNT);
+            COL_COST = cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_COST);
+            COL_NOTES = cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_ICON_ID);
+            COL_DATE = cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_DATE);
+            COL_ICON_ID = cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_ICON_ID);
+
+            // Creates the parentList
+            for (int i = 0; i < cursor.getCount(); i++) {
+
+                // Create an expense out of each cursor row
+                Expense mExpense = new Expense(
+                        cursor.getString(COL_CATEGORY),
+                        cursor.getString(COL_NOTES),
+                        cursor.getString(COL_ACCOUNT),
+                        cursor.getInt(COL_ICON_ID),
+                        cursor.getLong(COL_DATE),
+                        cursor.getDouble(COL_COST)
+                );
+
+                if(mExpense.getDayOfMonth() == prevDayOfMonth){
+                    expenseList.add(mExpense);
+                    prevDayOfMonth = mExpense.getDayOfMonth();
+                } else {
+                    parentList.add(new ExpenseDay(expenseList));
+                }
+                Log.d(TAG, "CursorToExpenseConverter: New expense processed, i = " + i);
+            }
+        }
+        return parentList;
+    }
 
 }
