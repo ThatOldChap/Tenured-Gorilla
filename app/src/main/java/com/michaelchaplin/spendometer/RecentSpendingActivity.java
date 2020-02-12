@@ -76,7 +76,7 @@ public class RecentSpendingActivity extends AppCompatActivity {
     }
 
 
-    public List<ExpenseDay> CursorToExpenseConverter(Cursor cursor) {
+    public List<ExpenseDay> CursorToListConverter(Cursor cursor) {
 
         List<Expense> expenseList = new ArrayList<>();
         List<ExpenseDay> parentList = new ArrayList<>();
@@ -97,7 +97,7 @@ public class RecentSpendingActivity extends AppCompatActivity {
             COL_ICON_ID = cursor.getColumnIndex(SpendometerContract.ExpenseEntry.COL_ICON_ID);
 
             // Creates the parentList
-            for (int i = 0; i < cursor.getCount(); i++) {
+            for (cursor.movetoFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 
                 // Create an expense out of each cursor row
                 Expense mExpense = new Expense(
@@ -115,10 +115,12 @@ public class RecentSpendingActivity extends AppCompatActivity {
                 } else {
                     parentList.add(new ExpenseDay(expenseList));
                 }
-                Log.d(TAG, "CursorToExpenseConverter: New expense processed, i = " + i);
+                Log.d(TAG, "CursorToExpenseConverter: New expense processed, cursor position = " + cursor.getPosition()); 
             }
+            return parentList;
         }
-        return parentList;
+        cursor.close();
+        return null;
     }
 
 }
