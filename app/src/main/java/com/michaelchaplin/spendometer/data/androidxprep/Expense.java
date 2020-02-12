@@ -1,4 +1,4 @@
-package com.michaelchaplin.spendometer.data;
+package com.michaelchaplin.spendometer.data.androidxprep;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

@@ -1,5 +1,6 @@
 package com.michaelchaplin.spendometer;
 
+import android.database.Cursor;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import com.michaelchaplin.spendometer.ExpandableRecyclerView.Expense;
 import com.michaelchaplin.spendometer.ExpandableRecyclerView.ExpenseDay;
 import com.michaelchaplin.spendometer.ExpandableRecyclerView.ExpenseDayAdapter;
+import com.michaelchaplin.spendometer.ExpandableRecyclerView.Parent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,11 +44,11 @@ public class RecentSpendingActivity extends AppCompatActivity {
         expenseData1.add(new Expense("Gas", "Ultramar", "PCMC", R.drawable.round_local_gas_station_white_48, 1581310800050L, 125.00));
         
         expenseData2.add(new Expense("Food", "Pho May", "PCMC", R.drawable.round_fastfood_white_48, 1581397200005L, 16.20));
-        expenseData2.add(new Expense("Alcohol", "Overflow Brewery", "AMEX", R.drawable.round_local_bar_white_48, 1581397205000L, 10));
+        expenseData2.add(new Expense("Alcohol", "Overflow Brewery", "AMEX", R.drawable.round_local_bar_white_48, 1581397205000L, 10.00));
                        
         expenseData3.add(new Expense("Movies", "Harley Quinn", "AMEX", R.drawable.round_local_movies_white_48, 1581483605000L, 26.87));
         expenseData3.add(new Expense("Work Dues", "PEO Renewal", "AMEX", R.drawable.round_work_white_48, 1581483600050L, 156.65));
-        expenseData3.add(new Expense("Sports", "Hockey Intramural", "Cash", R.drawable.round_sports_tennis_white_48, 1581483650000L, 20));
+        expenseData3.add(new Expense("Sports", "Hockey Intramural", "Cash", R.drawable.round_sports_tennis_white_48, 1581483650000L, 20.00));
                          
         expenseDay1 = new ExpenseDay(expenseData1);
         expenseDay2 = new ExpenseDay(expenseData2);
@@ -70,6 +72,5 @@ public class RecentSpendingActivity extends AppCompatActivity {
         
     }
 
-    
 
 }

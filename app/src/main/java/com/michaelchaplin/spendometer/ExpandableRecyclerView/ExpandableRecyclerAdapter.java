@@ -1,6 +1,7 @@
 package com.michaelchaplin.spendometer.ExpandableRecyclerView;
 
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -70,7 +71,6 @@ public abstract class ExpandableRecyclerAdapter<P extends Parent<C>, C, PVH exte
         mAttachedRecyclerViewPool = new ArrayList<>();
         mExpansionStateMap = new HashMap<>(mParentList.size());
     }
-
 
     // Implementation of the onCreateViewHolder method that is split to creates ViewHolders for both the Parent and Child
     @Override

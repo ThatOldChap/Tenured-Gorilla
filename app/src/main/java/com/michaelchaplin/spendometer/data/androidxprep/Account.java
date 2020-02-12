@@ -1,21 +1,24 @@
-package com.michaelchaplin.spendometer.data;
+package com.michaelchaplin.spendometer.data.androidxprep;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "category_table")
-public class Category {
+@Entity(tableName = "account_table")
+public class Account {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
 
     private String name;
 
+    private String currency;
+
     private int iconID;
 
     // Public Constructor
-    public Category(String name, int iconID) {
+    public Account(String name, String currency, int iconID) {
         this.name = name;
+        this.currency = currency;
         this.iconID = iconID;
     }
 
@@ -30,6 +33,9 @@ public class Category {
     }
     public String getName() {
         return name;
+    }
+    public String getCurrency() {
+        return currency;
     }
     public int getIconID() {
         return iconID;

@@ -59,5 +59,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        TextView testButton = findViewById(R.id.main_test1);
+        testButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, TestActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }
